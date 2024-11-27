@@ -4,6 +4,10 @@ import sqlite3
 connection = sqlite3.connect('animal_shelter.db')
 cursor = connection.cursor()
 
+with open("adoption.sql","r") as f:
+    ddl = f.read()
+
+cursor.executescript(ddl)
 
 # Insert data into Staff
 staff_data = [

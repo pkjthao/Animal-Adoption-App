@@ -1,5 +1,5 @@
 
-CREATE TABLE Staff (
+CREATE TABLE IF NOT EXISTS Staff (
     staffID TEXT PRIMARY KEY,
     firstName TEXT,
     lastName TEXT,
@@ -13,7 +13,7 @@ CREATE TABLE Staff (
     password TEXT
 );
 
-CREATE TABLE Adopters (
+CREATE TABLE IF NOT EXISTS Adopters (
     adopterID TEXT PRIMARY KEY,
     firstName TEXT,
     lastName TEXT,
@@ -23,7 +23,7 @@ CREATE TABLE Adopters (
     password TEXT
 );
 
-CREATE TABLE Animals (
+CREATE TABLE IF NOT EXISTS Animals (
     animalID INTEGER PRIMARY KEY,
     name TEXT,
     species TEXT,
@@ -38,7 +38,7 @@ CREATE TABLE Animals (
     reasonForIntake TEXT
 );
 
-CREATE TABLE Adoption_Requests (
+CREATE TABLE IF NOT EXISTS Adoption_Requests (
     adoptionID TEXT PRIMARY KEY,
     adopterID TEXT,
     animalID INTEGER,
@@ -51,7 +51,7 @@ CREATE TABLE Adoption_Requests (
     FOREIGN KEY (staffAdministrator) REFERENCES Staff(staffID)
 );
 
-CREATE TABLE Medical_Records (
+CREATE TABLE IF NOT EXISTS Medical_Records (
     medicalID INTEGER PRIMARY KEY,
     animalID INTEGER,
     staffID TEXT,
@@ -63,7 +63,7 @@ CREATE TABLE Medical_Records (
     FOREIGN KEY (staffID) REFERENCES Staff(staffID)
 );
 
-CREATE TABLE Shelter_Locations (
+CREATE TABLE IF NOT EXISTS Shelter_Locations (
     locationID INTEGER PRIMARY KEY,
     locationName TEXT,
     address TEXT,
@@ -72,7 +72,7 @@ CREATE TABLE Shelter_Locations (
     currentOccupancy INTEGER
 );
 
-CREATE TABLE Donations (
+CREATE TABLE IF NOT EXISTS Donations (
     donationID INTEGER PRIMARY KEY,
     donorID INTEGER,
     locationID INTEGER,
@@ -81,7 +81,7 @@ CREATE TABLE Donations (
     FOREIGN KEY (locationID) REFERENCES Shelter_Locations(locationID)
 );
 
-CREATE TABLE Donors (
+CREATE TABLE IF NOT EXISTS Donors (
     donorID INTEGER PRIMARY KEY,
     name TEXT,
     phoneNumber INTEGER,
@@ -89,7 +89,7 @@ CREATE TABLE Donors (
     address TEXT
 );
 
-CREATE TABLE Paycheck (
+CREATE TABLE IF NOT EXISTS Paycheck (
     payDate TEXT,
     staffID TEXT,
     hoursWorked INTEGER,
