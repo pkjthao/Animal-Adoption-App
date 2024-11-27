@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS Animals (
     healthStatus TEXT,
     description TEXT,
     locationID INTEGER,
-    reasonForIntake TEXT
+    reasonForIntake TEXT,
+    adoptionFee INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS Adoption_Requests (
@@ -43,7 +44,6 @@ CREATE TABLE IF NOT EXISTS Adoption_Requests (
     adopterID TEXT,
     animalID INTEGER,
     dateAdopted TEXT,
-    adoptionFee INTEGER,
     adoptionStatus TEXT,
     staffAdministrator TEXT,
     FOREIGN KEY (adopterID) REFERENCES Adopters(adopterID),

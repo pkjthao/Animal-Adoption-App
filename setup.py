@@ -19,7 +19,7 @@ staff_data = [
 ]
 
 cursor.executemany("""
-INSERT INTO Staff (staffID, firstName, lastName, position, phoneNumber, email, hireDate, salary, workLocation, status, password)
+INSERT OR IGNORE INTO Staff (staffID, firstName, lastName, position, phoneNumber, email, hireDate, salary, workLocation, status, password)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 """, staff_data)
 
@@ -33,36 +33,36 @@ adopters_data = [
 ]
 
 cursor.executemany("""
-INSERT INTO Adopters (adopterID, firstName, lastName, phoneNumber, email, address, password)
+INSERT OR IGNORE INTO Adopters (adopterID, firstName, lastName, phoneNumber, email, address, password)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 """, adopters_data)
 
 # Insert data into Animals
 animals_data = [
-    (1, "Buddy", "Dog", "Labrador", 3, "Male", "2023-01-15", 0, "Healthy", "Friendly dog", 1, "Stray"),
-    (2, "Mittens", "Cat", "Siamese", 2, "Female", "2023-02-10", 0, "Healthy", "Playful cat", 2, "Surrendered"),
-    (3, "Shadow", "Dog", "German Shepherd", 5, "Male", "2023-03-05", 1, "Healthy", "Loyal companion", 1, "Lost"),
-    (4, "Bella", "Cat", "Persian", 4, "Female", "2023-04-20", 0, "Healthy", "Calm demeanor", 2, "Stray"),
-    (5, "Max", "Dog", "Beagle", 1, "Male", "2023-05-25", 0, "Healthy", "Energetic puppy", 1, "Stray"),
+    (1, "Buddy", "Dog", "Labrador", 3, "Male", "2023-01-15", 0, "Healthy", "Friendly dog", 1, "Stray", 200),
+    (2, "Mittens", "Cat", "Siamese", 2, "Female", "2023-02-10", 0, "Healthy", "Playful cat", 2, "Surrendered", 100),
+    (3, "Shadow", "Dog", "German Shepherd", 5, "Male", "2023-03-05", 1, "Healthy", "Loyal companion", 1, "Lost", 300),
+    (4, "Bella", "Cat", "Persian", 4, "Female", "2023-04-20", 0, "Healthy", "Calm demeanor", 2, "Stray", 150),
+    (5, "Max", "Dog", "Beagle", 1, "Male", "2023-05-25", 0, "Healthy", "Energetic puppy", 1, "Stray", 350),
 ]
 
 cursor.executemany("""
-INSERT INTO Animals (animalID, name, species, breed, age, gender, dateOfArrival, adoptedOrNot, healthStatus, description, locationID, reasonForIntake)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO Animals (animalID, name, species, breed, age, gender, dateOfArrival, adoptedOrNot, healthStatus, description, locationID, reasonForIntake, adoptionFee)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 """, animals_data)
 
 # Insert data into Adoption_Requests
 adoption_requests_data = [
-    ("AR001", "A001", 3, "2023-03-15", 150, "Approved", "S001"),
-    ("AR002", "A002", 1, "2023-04-01", 200, "Pending", "S002"),
-    ("AR003", "A003", 2, "2023-04-20", 100, "Denied", "S003"),
-    ("AR004", "A004", 4, None, 150, "Pending", "S004"),
-    ("AR005", "A005", 5, None, 180, "Pending", "S005"),
+    ("AR001", "A001", 3, "2023-03-15", "Approved", "S001"),
+    ("AR002", "A002", 1, "2023-04-01", "Pending", "S002"),
+    ("AR003", "A003", 2, "2023-04-20", "Denied", "S003"),
+    ("AR004", "A004", 4, None, "Pending", "S004"),
+    ("AR005", "A005", 5, None, "Pending", "S005"),
 ]
 
 cursor.executemany("""
-INSERT INTO Adoption_Requests (adoptionID, adopterID, animalID, dateAdopted, adoptionFee, adoptionStatus, staffAdministrator)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO Adoption_Requests (adoptionID, adopterID, animalID, dateAdopted, adoptionStatus, staffAdministrator)
+VALUES (?, ?, ?, ?, ?, ?);
 """, adoption_requests_data)
 
 # Insert data into Medical_Records
@@ -75,7 +75,7 @@ medical_records_data = [
 ]
 
 cursor.executemany("""
-INSERT INTO Medical_Records (medicalID, animalID, staffID, diagnosis, treatment, date, note)
+INSERT OR IGNORE INTO Medical_Records (medicalID, animalID, staffID, diagnosis, treatment, date, note)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 """, medical_records_data)
 
@@ -89,16 +89,37 @@ shelter_locations_data = [
 ]
 
 cursor.executemany("""
-INSERT INTO Shelter_Locations (locationID, locationName, address, phoneNumber, capacity, currentOccupancy)
+INSERT OR IGNORE INTO Shelter_Locations (locationID, locationName, address, phoneNumber, capacity, currentOccupancy)
 VALUES (?, ?, ?, ?, ?, ?);
 """, shelter_locations_data)
 
-# Insert data into Donations
-donations_data = [
-    (1, 1, 1, 500, "2023-01-15"),
-    (2, 2, 2, 300, "2023-02-20"),
-    (3, 3, 3, 700, "2023-05-28")
+donation_data = [
+    (1, 1, 2, 100, "2023-01-15"),  # John Doe donated $100 to Shelter Location 2
+    (2, 2, 1, 200, "2023-01-20"),  # Jane Smith donated $200 to Shelter Location 1
+    (3, 3, 3, 50, "2023-01-25"),   # Emily Davis donated $50 to Shelter Location 3
+    (4, 4, 2, 150, "2023-02-05"),  # Michael Johnson donated $150 to Shelter Location 2
+    (5, 5, 1, 75, "2023-02-10")    # Chris Lee donated $75 to Shelter Location 1
 ]
+
+# Insert data into Donations table
+cursor.executemany("""
+INSERT OR IGNORE INTO Donations (donationID, donorID, locationID, amount, donationDate)
+VALUES (?, ?, ?, ?, ?);
+""", donation_data)
+
+donor_data = [
+    (1, "John Doe", 5551234567, "johndoe@example.com", "123 Elm St."),
+    (2, "Jane Smith", 5559876543, "janesmith@example.com", "456 Oak St."),
+    (3, "Emily Davis", 5555555555, "emilydavis@example.com", "789 Pine St."),
+    (4, "Michael Johnson", 5554329876, "michaelj@example.com", "321 Birch St."),
+    (5, "Chris Lee", 5558765432, "chrislee@example.com", "654 Cedar St.")
+]
+
+# Insert data into Donors table
+cursor.executemany("""
+INSERT OR IGNORE INTO Donors (donorID, name, phoneNumber, email, address)
+VALUES (?, ?, ?, ?, ?);
+""", donor_data)
 
 # Insert data into Paycheck
 paycheck_data = [
@@ -115,7 +136,7 @@ paycheck_data = [
 ]
 
 cursor.executemany("""
-INSERT INTO Paycheck (payDate, staffID, hoursWorked, amount)
+INSERT OR IGNORE INTO Paycheck (payDate, staffID, hoursWorked, amount)
 VALUES (?, ?, ?, ?);
 """, paycheck_data)
 
