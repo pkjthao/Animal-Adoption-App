@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Shelter</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/styles.css' %}">
+    <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <h1>Welcome to the Animal Shelter</h1>
+
+    <h2>What would you like to do?</h2>
+    <ul>
+        <li><a href="{% url 'submit_animal' %}">Submit a New Animal</a></li>
+        <li><a href="{% url 'view_animals' %}">View Animals in the Shelter</a></li>
+    </ul>
+</body>
+</html>

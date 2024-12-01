@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Animals</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/styles.css' %}">
+    <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <h1>Animals in the Shelter</h1>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Species</th>
+            <th>Breed</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Date of Arrival</th>
+            <th>Health Status</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Reason for Intake</th>
+            <th>Adoption Fee</th>
+        </tr>
+        {% for animal in animals %}
+        <tr>
+            <td>{{ animal.name }}</td>
+            <td>{{ animal.species }}</td>
+            <td>{{ animal.breed }}</td>
+            <td>{{ animal.age }}</td>
+            <td>{{ animal.gender }}</td>
+            <td>{{ animal.dateOfArrival }}</td>
+            <td>{{ animal.healthStatus }}</td>
+            <td>{{ animal.description }}</td>
+            <td>{{ animal.locationID }}</td>
+            <td>{{ animal.reasonForIntake }}</td>
+            <td>{{ animal.adoptionFee }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="11">No animals available.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{% url 'default_page' %}">Back to Main Page</a>
+</body>
+</html>
