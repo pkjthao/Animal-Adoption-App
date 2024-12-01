@@ -122,7 +122,7 @@ STATIC_URL = '/static/'
 
 # Define where to find static files
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # This assumes you have a 'static' directory at the project root
+    BASE_DIR / "shelter/static",  # This assumes you have a 'static' directory at the project root
 ]
 
 # The folder where static files will be collected (for production)
