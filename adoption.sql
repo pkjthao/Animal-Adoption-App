@@ -69,24 +69,20 @@ CREATE TABLE IF NOT EXISTS Shelter_Locations (
     address TEXT,
     phoneNumber INTEGER,
     capacity INTEGER,
-    currentOccupancy INTEGER
+    currentOccupancy INTEGER,
+    funds INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS Donations (
     donationID INTEGER PRIMARY KEY,
-    donorID INTEGER,
     locationID INTEGER,
     amount INTEGER,
     donationDate TEXT,
+    donorName TEXT,
+    donorPhoneNumber INTEGER,
+    donorEmail TEXT,
+    donorAddress TEXT,
     FOREIGN KEY (locationID) REFERENCES Shelter_Locations(locationID)
-);
-
-CREATE TABLE IF NOT EXISTS Donors (
-    donorID INTEGER PRIMARY KEY,
-    name TEXT,
-    phoneNumber INTEGER,
-    email TEXT,
-    address TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Paycheck (

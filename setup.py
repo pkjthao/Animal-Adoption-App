@@ -81,45 +81,31 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
 
 # Insert data into Shelter_Locations
 shelter_locations_data = [
-    (1, "Main Shelter", "123 Shelter Lane", 1234567899, 50, 45),
-    (2, "East Shelter", "456 Rescue Road", 1234567888, 30, 28),
-    (3, "West Shelter", "789 Haven Blvd", 1234567877, 40, 35),
-    (4, "Downtown Shelter", "321 Care Way", 1234567866, 25, 20),
-    (5, "Uptown Shelter", "654 Safe Street", 1234567855, 35, 33),
+    (1, "Main Shelter", "123 Shelter Lane", 1234567899, 50, 45, 0),
+    (2, "East Shelter", "456 Rescue Road", 1234567888, 30, 28, 2500),
+    (3, "West Shelter", "789 Haven Blvd", 1234567877, 40, 35, 100),
+    (4, "Downtown Shelter", "321 Care Way", 1234567866, 25, 20, 750),
+    (5, "Uptown Shelter", "654 Safe Street", 1234567855, 35, 33, 300),
 ]
 
 cursor.executemany("""
-INSERT OR IGNORE INTO Shelter_Locations (locationID, locationName, address, phoneNumber, capacity, currentOccupancy)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO Shelter_Locations (locationID, locationName, address, phoneNumber, capacity, currentOccupancy, funds)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 """, shelter_locations_data)
 
 donation_data = [
-    (1, 1, 2, 100, "2023-01-15"),  # John Doe donated $100 to Shelter Location 2
-    (2, 2, 1, 200, "2023-01-20"),  # Jane Smith donated $200 to Shelter Location 1
-    (3, 3, 3, 50, "2023-01-25"),   # Emily Davis donated $50 to Shelter Location 3
-    (4, 4, 2, 150, "2023-02-05"),  # Michael Johnson donated $150 to Shelter Location 2
-    (5, 5, 1, 75, "2023-02-10")    # Chris Lee donated $75 to Shelter Location 1
+    (1, 2, 100, "2023-01-15", "John Doe", 5551234567, "johndoe@example.com", "123 Elm St."),  # John Doe donated $100 to Shelter Location 2
+    (2, 1, 200, "2023-01-20", "Jane Smith", 5559876543, "janesmith@example.com", "456 Oak St."),  # Jane Smith donated $200 to Shelter Location 1
+    (3, 3, 50, "2023-01-25",  "Emily Davis", 5555555555, "emilydavis@example.com", "789 Pine St."),   # Emily Davis donated $50 to Shelter Location 3
+    (4, 2, 150, "2023-02-05", "Michael Johnson", 5554329876, "michaelj@example.com", "321 Birch St."),  # Michael Johnson donated $150 to Shelter Location 2
+    (5, 1, 75, "2023-02-10", "Chris Lee", 5558765432, "chrislee@example.com", "654 Cedar St.")    # Chris Lee donated $75 to Shelter Location 1
 ]
 
 # Insert data into Donations table
 cursor.executemany("""
-INSERT OR IGNORE INTO Donations (donationID, donorID, locationID, amount, donationDate)
-VALUES (?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO Donations (donationID, locationID, amount, donationDate, donorName, donorPhoneNumber, donorEmail, donorAddress)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 """, donation_data)
-
-donor_data = [
-    (1, "John Doe", 5551234567, "johndoe@example.com", "123 Elm St."),
-    (2, "Jane Smith", 5559876543, "janesmith@example.com", "456 Oak St."),
-    (3, "Emily Davis", 5555555555, "emilydavis@example.com", "789 Pine St."),
-    (4, "Michael Johnson", 5554329876, "michaelj@example.com", "321 Birch St."),
-    (5, "Chris Lee", 5558765432, "chrislee@example.com", "654 Cedar St.")
-]
-
-# Insert data into Donors table
-cursor.executemany("""
-INSERT OR IGNORE INTO Donors (donorID, name, phoneNumber, email, address)
-VALUES (?, ?, ?, ?, ?);
-""", donor_data)
 
 # Insert data into Paycheck
 paycheck_data = [
