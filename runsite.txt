@@ -1,0 +1,5 @@
+To run the server, be in the overarching branch.
+Run 'source ./venv/bin/Activate' in the terminal
+Then run 'python shelter_project/manage.py runserver'
+To close the website, press Control-C
+To exit the virtual environment, type 'deactivate' in the terminal.
