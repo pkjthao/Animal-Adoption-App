@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import AnimalForm
+from .forms import AdoptionForm
 from .models import Animals
+from .models import AdoptionRequests
 
 def submit_animal(request):
     if request.method == 'POST':
@@ -19,3 +21,14 @@ def view_animals(request):
 
 def default_page(request):
     return render(request, 'default_page.html')
+
+def adoption_app(request):
+    if request.method == 'POST':
+        form = AdoptionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('adoption_app')
+    else:
+        form = AnimalForm()
+    
+    return render(request, 'adoption_app.html', {'form': form})
