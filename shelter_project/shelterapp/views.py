@@ -9,7 +9,7 @@ def submit_animal(request):
         form = AnimalForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('animal_list')  # Redirect to the list page
+            return redirect('view_animals')  # Redirect to the list page
     else:
         form = AnimalForm()
 
@@ -17,7 +17,8 @@ def submit_animal(request):
 
 def view_animals(request):
     animals = Animals.objects.all()
-    return render(request, 'view_animals.html', {'animals': animals})
+    medical_records = medical_records.objects.all()
+    return render(request, 'view_animals.html', {'animals': animals, 'medical_records': medical_records})
 
 def view_shelters(request):
     shelters = ShelterLocations.objects.all()
@@ -42,6 +43,6 @@ def adoption_app(request):
             form.save()
             return redirect('adoption_app')
     else:
-        form = AnimalForm()
+        form = AdoptionForm()
     
     return render(request, 'adoption_app.html', {'form': form})
