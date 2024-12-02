@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import AnimalForm
 from .forms import AdoptionForm
-from .models import Animals
+from .models import Animals, ShelterLocations, Paycheck, MedicalRecords
 from .models import AdoptionRequests
 
 def submit_animal(request):
@@ -18,6 +18,19 @@ def submit_animal(request):
 def view_animals(request):
     animals = Animals.objects.all()
     return render(request, 'view_animals.html', {'animals': animals})
+
+def view_shelters(request):
+    shelters = ShelterLocations.objects.all()
+    return render(request, 'view_shelters.html', {'shelters': shelters})
+
+def view_paychecks(request):
+    paychecks = Paycheck.objects.all()
+    return render(request, 'view_paychecks.html', {'paychecks': paychecks})
+
+def view_medical_records(request):
+    medical_records = MedicalRecords.objects.all()
+    animals = Animals.objects.all()
+    return render(request, 'view_medical_records.html', {'medical_records': medical_records, 'animals': animals})
 
 def default_page(request):
     return render(request, 'default_page.html')
