@@ -25,23 +25,31 @@
             <th>Reason for Intake</th>
             <th>Adoption Fee</th>
         </tr>
-        {% for animal in animals %}
-        <tr>
-            <td>{{ animal.name }}</td>
-            <td>{{ animal.species }}</td>
-            <td>{{ animal.breed }}</td>
-            <td>{{ animal.age }}</td>
-            <td>{{ animal.gender }}</td>
-            <td>{{ animal.dateOfArrival }}</td>
-            <td>{{ animal.healthStatus }}</td>
-            <td>{{ animal.description }}</td>
-            <td>{{ animal.locationID }}</td>
-            <td>{{ animal.reasonForIntake }}</td>
-            <td>{{ animal.adoptionFee }}</td>
-        </tr>
+        {%for medical_record in medical_records%}
+            {% for animal in animals %}
+                {%if animal.animalID == medical_record.animalID%}
+                <tr>
+                    <td>{{ animal.name }}</td>
+                    <td>{{ animal.species }}</td>
+                    <td>{{ animal.breed }}</td>
+                    <td>{{ animal.age }}</td>
+                    <td>{{ animal.gender }}</td>
+                    <td>{{ animal.dateOfArrival }}</td>
+                    <td>{{ animal.healthStatus }}</td>
+                    <td>{{ animal.description }}</td>
+                    <td>{{ animal.locationID }}</td>
+                    <td>{{ animal.reasonForIntake }}</td>
+                    <td>{{ animal.adoptionFee }}</td>
+                </tr>
+                {% endif %}
+            {% empty %}
+            <tr>
+                <td colspan="11">No animals available.</td>
+            </tr>
+            {% endfor %}
         {% empty %}
         <tr>
-            <td colspan="11">No animals available.</td>
+            <td colspan="11">No medical records available.</td>
         </tr>
         {% endfor %}
     </table>

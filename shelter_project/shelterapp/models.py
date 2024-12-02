@@ -81,6 +81,7 @@ class ShelterLocations(models.Model):
     phoneNumber = models.IntegerField()
     capacity = models.IntegerField()
     currentOccupancy = models.IntegerField()
+    funds = models.IntegerField()
 
     def __str__(self):
         return self.locationName
@@ -88,25 +89,16 @@ class ShelterLocations(models.Model):
 
 class Donations(models.Model):
     donationID = models.AutoField(primary_key=True)
-    donorID = models.ForeignKey('Donors', on_delete=models.CASCADE)
     locationID = models.ForeignKey(ShelterLocations, on_delete=models.CASCADE)
     amount = models.IntegerField()
     donationDate = models.DateField()
-
-    def __str__(self):
-        return f'Donation of {self.amount} by {self.donorID}'
-
-
-class Donors(models.Model):
-    donorID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     phoneNumber = models.IntegerField()
     email = models.EmailField()
     address = models.TextField()
 
     def __str__(self):
-        return self.name
-
+        return f'Donation of {self.amount} by {self.name}'
 
 class Paycheck(models.Model):
     payDate = models.DateField()
