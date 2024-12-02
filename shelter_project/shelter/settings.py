@@ -83,6 +83,8 @@ DATABASES = {
 }
 
 
+AUTH_USER_MODEL = 'shelterapp.CustomUser'
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -137,3 +139,12 @@ MEDIA_ROOT = BASE_DIR / 'media'  # This is where your uploaded media will be sto
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Redirect staff to their dashboard
+STAFF_LOGIN_REDIRECT_URL = '/staff/dashboard/'  # Replace with your staff dashboard URL
+
+# Redirect users to their dashboard
+USER_LOGIN_REDIRECT_URL = '/user/dashboard/'  # Replace with your user dashboard URL
+
+LOGIN_URL = '/user/login/'  # Default login URL
+

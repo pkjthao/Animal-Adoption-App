@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -11,5 +12,15 @@ urlpatterns = [
     # View list of paychecks
     path('staff_paychecks/', views.view_paychecks, name='view_paychecks'),
     # View list of medical records
-    path('medical_records/', views.view_medical_records, name='view_medical_records')
+    path('medical_records/', views.view_medical_records, name='view_medical_records'),
+    #User login and signup
+    path('user/login/', auth_views.LoginView.as_view(template_name='user_login.html'), name='user_login'),
+    path('user/signup/', views.user_signup, name='user_signup'),
+    
+    # Staff login (no signup option)
+    path('staff/login/', auth_views.LoginView.as_view(template_name='staff_login.html'), name='staff_login'),
+]
+
+urlpatterns += [
+    path('accounts/profile/', views.after_login),  # Default login redirect
 ]

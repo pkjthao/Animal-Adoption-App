@@ -1,11 +1,16 @@
 from django.contrib import admin
-from .models import Staff, Adopters, Animals, AdoptionRequests, MedicalRecords, ShelterLocations, Donations, Paycheck
+from django.contrib.auth.admin import UserAdmin
+from .models import Staff, Adopter, Animal, AdoptionRequest, MedicalRecord, ShelterLocation, Donation, Paycheck, CustomUser
 
 admin.site.register(Staff)
-admin.site.register(Adopters)
-admin.site.register(Animals)
-admin.site.register(AdoptionRequests)
-admin.site.register(MedicalRecords)
-admin.site.register(ShelterLocations)
-admin.site.register(Donations)
+admin.site.register(Adopter)
+admin.site.register(Animal)
+admin.site.register(AdoptionRequest)
+admin.site.register(MedicalRecord)
+admin.site.register(ShelterLocation)
+admin.site.register(Donation)
 admin.site.register(Paycheck)
+
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    pass
