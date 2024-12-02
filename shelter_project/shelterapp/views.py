@@ -17,7 +17,7 @@ def submit_animal(request):
 
 def view_animals(request):
     animals = Animals.objects.all()
-    medical_records = medical_records.objects.all()
+    medical_records = MedicalRecords.objects.all()
     return render(request, 'view_animals.html', {'animals': animals, 'medical_records': medical_records})
 
 def view_shelters(request):
