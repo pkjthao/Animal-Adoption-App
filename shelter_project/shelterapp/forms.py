@@ -1,17 +1,24 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import Animal, AdoptionRequest, CustomUser
 from .models import Animals, AdoptionRequests, Adopters
 
 class AnimalForm(forms.ModelForm):
     class Meta:
-        model = Animals
+        model = Animal
         fields = ['name', 'species', 'breed', 'age', 'gender', 'dateOfArrival', 
                   'adoptedOrNot', 'healthStatus', 'description', 'locationID', 
                   'reasonForIntake', 'adoptionFee']
         
 class AdoptionForm(forms.ModelForm):
     class Meta:
-        model = AdoptionRequests
+        model = AdoptionRequest
         fields = ['dateAdopted', 'adoptionStatus']
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser  # Dynamically fetch the custom user model
+        fields = ['username', 'email', 'password1', 'password2']  # Adjust as needed
         
 class AdopterForm(forms.ModelForm):
     class Meta:

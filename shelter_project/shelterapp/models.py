@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, UserManager
 
 class Staff(models.Model):
     staffID = models.CharField(primary_key=True, max_length=100)
@@ -17,7 +18,7 @@ class Staff(models.Model):
         return f'{self.firstName} {self.lastName}'
 
 
-class Adopters(models.Model):
+class Adopter(models.Model):
     adopterID = models.CharField(primary_key=True, max_length=100)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
@@ -30,7 +31,7 @@ class Adopters(models.Model):
         return f'{self.firstName} {self.lastName}'
 
 
-class Animals(models.Model):
+class Animal(models.Model):
     animalID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=100)
@@ -49,10 +50,10 @@ class Animals(models.Model):
         return self.name
 
 
-class AdoptionRequests(models.Model):
+class AdoptionRequest(models.Model):
     adoptionID = models.CharField(primary_key=True, max_length=100)
-    adopterID = models.ForeignKey(Adopters, on_delete=models.CASCADE)
-    animalID = models.ForeignKey(Animals, on_delete=models.CASCADE)
+    adopterID = models.ForeignKey(Adopter, on_delete=models.CASCADE)
+    animalID = models.ForeignKey(Animal, on_delete=models.CASCADE)
     dateAdopted = models.DateField()
     adoptionStatus = models.CharField(max_length=100)
     staffAdministrator = models.ForeignKey(Staff, on_delete=models.CASCADE)
@@ -61,9 +62,9 @@ class AdoptionRequests(models.Model):
         return f'{self.adopterID} adopting {self.animalID}'
 
 
-class MedicalRecords(models.Model):
+class MedicalRecord(models.Model):
     medicalID = models.AutoField(primary_key=True)
-    animalID = models.ForeignKey(Animals, on_delete=models.CASCADE)
+    animalID = models.ForeignKey(Animal, on_delete=models.CASCADE)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
     diagnosis = models.CharField(max_length=200)
     treatment = models.TextField()
@@ -74,39 +75,31 @@ class MedicalRecords(models.Model):
         return f'Medical record for {self.animalID}'
 
 
-class ShelterLocations(models.Model):
+class ShelterLocation(models.Model):
     locationID = models.AutoField(primary_key=True)
     locationName = models.CharField(max_length=100)
     address = models.TextField()
     phoneNumber = models.IntegerField()
     capacity = models.IntegerField()
     currentOccupancy = models.IntegerField()
+    funds = models.IntegerField()
 
     def __str__(self):
         return self.locationName
 
 
-class Donations(models.Model):
+class Donation(models.Model):
     donationID = models.AutoField(primary_key=True)
-    donorID = models.ForeignKey('Donors', on_delete=models.CASCADE)
-    locationID = models.ForeignKey(ShelterLocations, on_delete=models.CASCADE)
+    locationID = models.ForeignKey(ShelterLocation, on_delete=models.CASCADE)
     amount = models.IntegerField()
     donationDate = models.DateField()
-
-    def __str__(self):
-        return f'Donation of {self.amount} by {self.donorID}'
-
-
-class Donors(models.Model):
-    donorID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     phoneNumber = models.IntegerField()
     email = models.EmailField()
     address = models.TextField()
 
     def __str__(self):
-        return self.name
-
+        return f'Donation of {self.amount} by {self.name}'
 
 class Paycheck(models.Model):
     payDate = models.DateField()
@@ -119,3 +112,7 @@ class Paycheck(models.Model):
 
     def __str__(self):
         return f'Paycheck for {self.staffID} on {self.payDate}'
+    
+class CustomUser(AbstractUser):
+    objects = UserManager()  # Explicitly provide the default manager
+    is_staff_user = models.BooleanField(default=False) 

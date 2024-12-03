@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Medical Records</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
+    <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <h1>Medical Records</h1>
+
+    <table>
+        <tr>
+            <th>Animal Name</th>
+            <th>Diagnosis</th>
+            <th>Treatment</th>
+            <th>Date</th>
+            <th>Note</th>
+        </tr>
+
+        
+        {% for medical_record in medical_records %}
+            {% for animal in animals %}
+                {% if animal.animalID == medical_record.animalID %}
+                    <tr>
+                        <td>{{ animal.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ medical_record.diagnosis }}</td>
+                        <td>{{ medical_record.treatment }}</td>
+                        <td>{{ medical_record.date }}</td>
+                        <td>{{ medical_record.note }}</td>
+                    </tr>
+                {% endif %}
+            {% empty %}
+            <tr>
+                <td colspan="11">No medical records available.</td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{% url 'default_page' %}">Back to Main Page</a>
+</body>
+</html>
