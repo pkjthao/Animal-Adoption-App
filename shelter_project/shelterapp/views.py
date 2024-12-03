@@ -2,12 +2,11 @@ from django.shortcuts import render, redirect
 from .forms import AnimalForm, AdoptionForm, CustomUserCreationForm, AdopterForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, AdoptionRequest, CustomUser, Adopter
+from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation,AdoptionRequest, CustomUser, Adopter
 from django.contrib import messages
 from .forms import AnimalForm
 from .forms import AdoptionForm
-from .models import Animals, ShelterLocations, Paycheck, MedicalRecords, Staff
-from .models import AdoptionRequests
+from .models import Paycheck, Staff
 
 def submit_animal(request):
     if request.method == 'POST':
@@ -37,10 +36,33 @@ def view_employees(request):
     employees = Staff.objects.all()
     return render(request, 'view_employees.html', {'employees': employees})
 
+def view_donations(request):
+    donations = Donation.objects.all()
+    return render(request, 'view_donations.html', {'donations': donations})
+
 def view_medical_records(request):
     medical_records = MedicalRecord.objects.all()
     animals = Animal.objects.all()
     return render(request, 'view_medical_records.html', {'medical_records': medical_records, 'animals': animals})
+
+def medical_records_search(request):
+    query = request.GET.get('q', '')  # Get the search term from the query parameter
+    
+    # If there's a search query, filter medical records based on it
+    if query:
+        medical_records = MedicalRecord.objects.filter(
+            Q(diagnosis__icontains=query) |
+            Q(animalID__name__icontains=query) |
+            Q(staffID__firstName__icontains=query) |
+            Q(staffID__lastName__icontains=query)
+        )
+    else:
+        medical_records = MedicalRecord.objects.all()  # Show all records if no query is provided
+
+    # Render the page with the medical records and the query
+    return render(request, 'medical_records_search.html', {
+        'medical_records': medical_records, 'query': query
+    })
 
 def default_page(request):
     return render(request, 'default_page.html')

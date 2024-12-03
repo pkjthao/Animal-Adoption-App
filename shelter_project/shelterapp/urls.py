@@ -14,11 +14,15 @@ urlpatterns = [
     path('staff_paychecks/', views.view_paychecks, name='view_paychecks'),
     # View list of medical records
     path('medical_records/', views.view_medical_records, name='view_medical_records'),
+    # View donations
+    path('donations/', views.view_donations, name='view_donations'),
     #User login and signup
     path('user/login/', auth_views.LoginView.as_view(template_name='user_login.html'), name='user_login'),
     path('user/signup/', views.user_signup, name='user_signup'),
     # Staff login (no signup option)
     path('staff/login/', auth_views.LoginView.as_view(template_name='staff_login.html'), name='staff_login'),
+    # Medical record search
+    path('medical-records/', views.medical_records_search, name='medical_records_search')
 ]
 
 urlpatterns += [

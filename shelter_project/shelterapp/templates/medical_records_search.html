@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records Search</title>
+</head>
+<body>
+    <h1>Search Medical Records</h1>
+
+    <!-- Search form -->
+    <form method="get" action="{% url 'medical_records_search' %}">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search by animal name, diagnosis, or staff">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display search results -->
+    <h2>Search Results</h2>
+    {% if medical_records %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Date</th>
+                    <th>Staff</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in medical_records %}
+                    <tr>
+                        <td>{{ record.animalID.name }}</td>
+                        <td>{{ record.diagnosis }}</td>
+                        <td>{{ record.treatment }}</td>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.staffID.firstName }} {{ record.staffID.lastName }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No medical records found for "{{ query }}".</p>
+    {% endif %}
+</body>
+</html>
