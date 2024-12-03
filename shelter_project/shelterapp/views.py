@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
-from .forms import AnimalForm, AdoptionForm, CustomUserCreationForm
+from .forms import AnimalForm, AdoptionForm, CustomUserCreationForm, AdopterForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, AdoptionRequest, CustomUser
-from .forms import AnimalForm, AdoptionForm, AdopterForm
-from .models import Animals, AdoptionRequests, Adopters
+from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, AdoptionRequest, CustomUser, Adopter
 from django.contrib import messages
 
 def submit_animal(request):

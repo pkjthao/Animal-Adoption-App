@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Animal, AdoptionRequest, CustomUser
-from .models import Animals, AdoptionRequests, Adopters
+from .models import Animal, AdoptionRequest, CustomUser, Adopter
 
 class AnimalForm(forms.ModelForm):
     class Meta:
@@ -22,11 +21,11 @@ class CustomUserCreationForm(UserCreationForm):
         
 class AdopterForm(forms.ModelForm):
     class Meta:
-        model = Adopters
+        model = Adopter
         fields = ['adopterID', 'firstName', 'lastName', 'phoneNumber', 'email', 'address', 'password']
         
     def clean_adopterID(self):
         adopterID = self.cleaned_data.get('adopterID')
-        if Adopters.objects.filter(adopterID=adopterID).exists():
+        if Adopter.objects.filter(adopterID=adopterID).exists():
             raise forms.ValidationError('An adopter with this ID already exists. Please use a different ID.')
         return adopterID
