@@ -11,5 +11,7 @@ urlpatterns = [
     # View list of paychecks
     path('staff_paychecks/', views.view_paychecks, name='view_paychecks'),
     # View list of medical records
-    path('medical_records/', views.view_medical_records, name='view_medical_records')
+    path('medical_records/', views.view_medical_records, name='view_medical_records'),
+    # View list of employees
+    path('employees/', views.view_employees, name='view_employees')
 ]

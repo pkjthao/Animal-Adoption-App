@@ -13,21 +13,27 @@
 
     <table>
         <tr>
-            <th>Animal Name</th>
-            <th>Staff Name</th>
-            <th>Diagnosis</th>
-            <th>Treatment</th>
-            <th>Date</th>
-            <th>Note</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Position</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Hire Date</th>
+            <th>Salary</th>
+            <th>Location Name</th>
+            <th>Status</th>
         </tr>
-        {% for medical_record in medical_records %}
+        {% for employee in employees %}
         <tr>
-            <td>{{ medical_record.locationName }}</td>
-            <td>{{ medical_record.address }}</td>
-            <td>{{ medical_record.phoneNumber }}</td>
-            <td>{{ medical_record.capacity }}</td>
-            <td>{{ medical_record.currentOccupancy }}</td>
-            <td>{{ medical_record.funds }}</td>
+            <td>{{ employee.firstName }}</td>
+            <td>{{ employee.lastName }}</td>
+            <td>{{ employee.position }}</td>
+            <td>{{ employee.phoneNumber }}</td>
+            <td>{{ employee.email }}</td>
+            <td>{{ employee.hireDate }}</td>
+            <td>{{ employee.salary }}</td>
+            <td>{{ employee.workLocation }}</td>
+            <td>{{ employee.status }}</td>
         </tr>
         {% empty %}
         <tr>
