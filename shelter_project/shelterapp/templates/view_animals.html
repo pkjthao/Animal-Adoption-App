@@ -12,33 +12,14 @@
     <h1>Animals in the Shelter</h1>
 
     <table>
-        <tr>
-            <th>Name</th>
-            <th>Species</th>
-            <th>Breed</th>
-            <th>Age</th>
-            <th>Gender</th>
-            <th>Date of Arrival</th>
-            <th>Health Status</th>
-            <th>Description</th>
-            <th>Location</th>
-            <th>Reason for Intake</th>
-            <th>Adoption Fee</th>
-        </tr>
         {% for animal in animals %}
-        <tr>
-            <td>{{ animal.name }}</td>
-            <td>{{ animal.species }}</td>
-            <td>{{ animal.breed }}</td>
-            <td>{{ animal.age }}</td>
-            <td>{{ animal.gender }}</td>
-            <td>{{ animal.dateOfArrival }}</td>
-            <td>{{ animal.healthStatus }}</td>
-            <td>{{ animal.description }}</td>
-            <td>{{ animal.locationID }}</td>
-            <td>{{ animal.reasonForIntake }}</td>
-            <td>{{ animal.adoptionFee }}</td>
-        </tr>
+            <li>
+                <img src="{% static 'shelterapp/images/animals/' %}{{ animal.animalID }}.png" alt="{{ animal.name }}" width="200" height="200">
+                <br>
+                <a href="{% url 'animal_profile' animal.animalID %}">
+                    {{ animal.name }} - {{ animal.species }}
+                </a>
+            </li>
         {% empty %}
         <tr>
             <td colspan="11">No animals available.</td>

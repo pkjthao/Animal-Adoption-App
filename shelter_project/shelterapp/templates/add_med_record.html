@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Medical Record</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
+    <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <h1>Medical Request Form</h1>
+
+    <!-- Search Form -->
+    <form method="get" action="">
+        <label for="search">Search Animal by Name:</label>
+        <input type="text" id="search" name="search" value="{{ request.GET.search }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Search Results -->
+    <h2>Search Results</h2>
+    <ul>
+        {% for animal in animals %}
+            <li>
+                {{ animal.name }} ({{ animal.animalID }})
+                <a href="?selected_animal={{ animal.animalID }}">Select</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Selected Animal -->
+    {% if selected_animal %}
+        <h3>Selected Animal: {{ selected_animal.name }} (ID: {{ selected_animal.animalID }})</h3>
+    {% endif %}
+
+    <!-- Medical Record Form -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if selected_animal %}
+            <input type="hidden" name="animalID" value="{{ selected_animal.animalID }}">
+        {% endif %}
+        <button type="submit">Submit Medical Record</button>
+    </form>
+</body>
+</html>

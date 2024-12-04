@@ -11,15 +11,19 @@
 <body>
     <h1>Welcome to the Animal Shelter</h1>
 
-    <h2>What would you like to do?</h2>
-    <ul>
-        <li><a href="{% url 'submit_animal' %}">Submit a New Animal</a></li>
-        <li><a href="{% url 'view_animals' %}">View Animals in the Shelter</a></li>
-        <li><a href="{% url 'adoption_app' %}">Submit Adoption Request</a></li>
-        <li><a href="{% url 'view_shelters' %}">View Shelter Locations</a></li>
-        <li><a href="{% url 'view_paychecks' %}">View Employee Paychecks</a></li>
-        <li><a href="{% url 'view_medical_records' %}">View Medical Records</a></li>
-        <li><a href="{% url 'add_adopters' %}">Add New User</a></li>
-    </ul>
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.username }}! You are logged in.</p>
+        <ul>
+            <li><a href="{% url 'view_animals' %}">View Animals in the Shelter</a></li>
+            <li><a href="{% url 'submit_animal' %}">Submit a New Animal</a></li>
+            <li><a href="{% url 'add_med_record' %}">Add Medical Record</a></li>
+            <li><a href="{% url 'view_shelters' %}">View Shelter Locations</a></li>
+        </ul>
+    {% else %}
+        <ul>
+            <li><a href="{% url 'user_login' %}">Login</a></li>
+            <li><a href="{% url 'user_signup' %}">Sign Up</a></li>
+        </ul>
+    {% endif %}
 </body>
 </html>

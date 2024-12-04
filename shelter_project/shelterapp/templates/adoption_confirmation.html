@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adoption Request Submitted</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
+    <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <h1>Adoption Request Submitted</h1>
+    <p>Thank you for submitting an adoption request. We will review it shortly.</p>
+    <a href="{% url 'view_animals' %}">Back to Viewing Animals</a>
+</body>
+</html>

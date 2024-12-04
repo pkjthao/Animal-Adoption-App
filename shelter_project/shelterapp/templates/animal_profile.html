@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ animal.name }}'s Profile</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
+    <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <img src="{% static 'shelterapp/images/animals/' %}{{ animal.animalID }}.png" alt="{{ animal.name }}" width="200" height="200">
+    <h1>{{ animal.name }}</h1>
+    <p><strong>Species:</strong> {{ animal.species }}</p>
+    <p><strong>Breed:</strong> {{ animal.breed }}</p>
+    <p><strong>Age:</strong> {{ animal.age }}</p>
+    <p><strong>Gender:</strong> {{ animal.gender }}</p>
+    <p><strong>Date of Arrival:</strong> {{ animal.dateOfArrival }}</p>
+    <p><strong>Adopted:</strong> {{ animal.adoptedOrNot|yesno:"Yes,No" }}</p>
+    <p><strong>Health Status:</strong> {{ animal.healthStatus }}</p>
+    <p><strong>Description:</strong> {{ animal.description }}</p>
+    <p><strong>Reason for Intake:</strong> {{ animal.reasonForIntake }}</p>
+    <p><strong>Adoption Fee:</strong> ${{ animal.adoptionFee }}</p>
+
+    <a href="{% url 'adoption_app' animal.animalID %}">
+    <button>Adopt {{ animal.name }}</button>
+</a>
+</body>
+</html>
