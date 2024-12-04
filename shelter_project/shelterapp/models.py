@@ -1,34 +1,91 @@
 from django.db import models
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser, UserManager
 
+class CustomUser(AbstractUser):
+    objects = UserManager()  # Explicitly provide the default manager
+    is_staff_user = models.BooleanField(default=False) 
+
 class Staff(models.Model):
-    staffID = models.CharField(primary_key=True, max_length=100)
-    firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
+    staffID = models.AutoField(primary_key=True, unique=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='staff_profile')
     position = models.CharField(max_length=100)
-    phoneNumber = models.IntegerField()
-    email = models.EmailField()
+    phone_number = models.CharField(
+        max_length=14,  # Adjusted for (XXX) XXX-XXXX format
+        validators=[
+            RegexValidator(
+                regex=r'^\(\d{3}\) \d{3}-\d{4}$',
+                message="Phone number must be in the format '(XXX) XXX-XXXX'."
+            )
+        ]
+    )
     hireDate = models.DateField()
     salary = models.IntegerField()
-    workLocation = models.IntegerField()
-    status = models.CharField(max_length=50)
-    password = models.CharField(max_length=100)
 
     def __str__(self):
-        return f'{self.firstName} {self.lastName}'
+        return f'{self.user.username} - {self.position}'
 
 
 class Adopter(models.Model):
-    adopterID = models.CharField(primary_key=True, max_length=100)
-    firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
-    phoneNumber = models.IntegerField()
-    email = models.EmailField()
+    adopterID = models.AutoField(primary_key=True, unique=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='adopter_profile')
+    phone_number = models.CharField(
+        max_length=14,
+        validators=[
+            RegexValidator(
+                regex=r'^\(\d{3}\) \d{3}-\d{4}$',
+                message="Phone number must be in the format '(XXX) XXX-XXXX'."
+            )
+        ]
+    )
     address = models.TextField()
-    password = models.CharField(max_length=100)
 
     def __str__(self):
-        return f'{self.firstName} {self.lastName}'
+        return f'{self.user.first_name} {self.user.last_name}'
+
+
+class ShelterLocation(models.Model):
+    locationID = models.AutoField(primary_key=True)
+    locationName = models.CharField(max_length=100)
+    address = models.TextField()
+    phone_number = models.CharField(
+        max_length=14,
+        validators=[
+            RegexValidator(
+                regex=r'^\(\d{3}\) \d{3}-\d{4}$',
+                message="Phone number must be in the format '(XXX) XXX-XXXX'."
+            )
+        ]
+    )
+    capacity = models.IntegerField()
+    currentOccupancy = models.IntegerField()
+    funds = models.IntegerField()
+
+    def __str__(self):
+        return self.locationName
+
+
+class Donation(models.Model):
+    donationID = models.AutoField(primary_key=True)
+    locationID = models.ForeignKey(ShelterLocation, on_delete=models.CASCADE)
+    amount = models.IntegerField()
+    donationDate = models.DateField()
+    name = models.CharField(max_length=100)
+    phone_number = models.CharField(
+        max_length=14,
+        validators=[
+            RegexValidator(
+                regex=r'^\(\d{3}\) \d{3}-\d{4}$',
+                message="Phone number must be in the format '(XXX) XXX-XXXX'."
+            )
+        ]
+    )
+    email = models.EmailField()
+    address = models.TextField()
+
+    def __str__(self):
+        return f'Donation of {self.amount} by {self.name}'
+
 
 
 class Animal(models.Model):
@@ -74,33 +131,6 @@ class MedicalRecord(models.Model):
     def __str__(self):
         return f'Medical record for {self.animalID}'
 
-
-class ShelterLocation(models.Model):
-    locationID = models.AutoField(primary_key=True)
-    locationName = models.CharField(max_length=100)
-    address = models.TextField()
-    phoneNumber = models.IntegerField()
-    capacity = models.IntegerField()
-    currentOccupancy = models.IntegerField()
-    funds = models.IntegerField()
-
-    def __str__(self):
-        return self.locationName
-
-
-class Donation(models.Model):
-    donationID = models.AutoField(primary_key=True)
-    locationID = models.ForeignKey(ShelterLocation, on_delete=models.CASCADE)
-    amount = models.IntegerField()
-    donationDate = models.DateField()
-    name = models.CharField(max_length=100)
-    phoneNumber = models.IntegerField()
-    email = models.EmailField()
-    address = models.TextField()
-
-    def __str__(self):
-        return f'Donation of {self.amount} by {self.name}'
-
 class Paycheck(models.Model):
     payDate = models.DateField()
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
@@ -113,6 +143,3 @@ class Paycheck(models.Model):
     def __str__(self):
         return f'Paycheck for {self.staffID} on {self.payDate}'
     
-class CustomUser(AbstractUser):
-    objects = UserManager()  # Explicitly provide the default manager
-    is_staff_user = models.BooleanField(default=False) 

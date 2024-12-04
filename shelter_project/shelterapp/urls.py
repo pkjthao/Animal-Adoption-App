@@ -14,6 +14,10 @@ urlpatterns = [
     path('staff_paychecks/', views.view_paychecks, name='view_paychecks'),
     # View list of medical records
     path('medical_records/', views.view_medical_records, name='view_medical_records'),
+    # View donations
+    path('donations/', views.view_donations, name='view_donations'),
+    # Medical record search
+    path('medical-records/', views.medical_records_search, name='medical_records_search')
     #User login and signup
     path('user/login/', auth_views.LoginView.as_view(template_name='user_login.html'), name='user_login'),
     path('user/signup/', views.user_signup, name='user_signup'),
@@ -25,5 +29,17 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('accounts/profile/', views.after_login),  # Default login redirect
+    path('medical_records/', views.view_medical_records, name='view_medical_records'),
+    # View list of employees
+    path('employees/', views.view_employees, name='view_employees')
+]
+
+# All Staff + Adopter Sign ups and Logins
+urlpatterns += [
+    path('user/login/', views.adopter_login, name='adopter_login'),
+    path('staff/login/', views.staff_login, name='staff_login'),
+    path('adopter/signup/', views.adopter_signup, name='adopter_signup'),
+    path('adopter/dashboard/', views.adopter_dashboard, name='adopter_dashboard'),
+    path('staff/dashboard/', views.staff_dashboard, name='staff_dashboard'),
+    path('logout/', views.user_logout, name='user_logout'),
 ]
