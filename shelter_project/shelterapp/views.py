@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, CustomUserCreationForm, MedicalRecordForm
+from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, CustomUser, Adopter, Staff
@@ -66,17 +66,6 @@ def medical_records_search(request):
 def default_page(request):
     return render(request, 'default_page.html')
 
-# def adoption_app(request):
-#     if request.method == 'POST':
-#         form = AdoptionForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('adoption_app')
-#     else:
-#         form = AdoptionForm()
-    
-#     return render(request, 'adoption_app.html', {'form': form})
-
 def user_logout(request):
     logout(request)  # Logs out the user
     return redirect('adopter_login')  # Redirect to login page after logging out
@@ -85,22 +74,8 @@ def adopter_signup(request):
     if request.method == 'POST':
         form = CombinedAdopterSignupForm(request.POST)
         if form.is_valid():
-            # Create the user with first_name and last_name
-            user = CustomUser.objects.create_user(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1'],
-                email=form.cleaned_data['email'],
-                first_name=form.cleaned_data['first_name'],  # Add first_name
-                last_name=form.cleaned_data['last_name'],    # Add last_name
-                is_staff_user=False  # Ensure this is an adopter
-            )
-
-            # Create the adopter profile
-            Adopter.objects.create(
-                user=user,
-                phone_number=form.cleaned_data['phone_number'],
-                address=form.cleaned_data['address']
-            )
+            # Create the user with first_name, last_name, and password
+            user = form.save()  # The form's save method takes care of user creation
 
             # Log the user in after creating the user and profile
             login(request, user)
