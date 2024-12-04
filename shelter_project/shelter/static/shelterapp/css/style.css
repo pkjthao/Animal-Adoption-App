@@ -1,136 +1,138 @@
 /* General Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Body and Layout */
 body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    background-color: #f8f9fa;
-    color: #333;
-    padding: 0 20px;
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 0 20px;
 }
 
-h1, h2, h3 {
-    color: #2a2a2a;
+h1,
+h2,
+h3 {
+  color: #2a2a2a;
 }
 
 a {
-    text-decoration: none;
-    color: #007bff;
+  text-decoration: none;
+  color: #007bff;
 }
 
 a:hover {
-    color: #0056b3;
+  color: #0056b3;
 }
 
 /* Header Styling */
 header {
-    background-color: #007bff;
-    color: white;
-    padding: 20px 0;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #007bff;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
+  font-size: 3rem;
+  margin-bottom: 10px;
 }
 
 /* Main Content Section */
 .main-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 0;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 0;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .main-container .intro-text {
-    width: 48%;
+  width: 48%;
 }
 
 .main-container .intro-text h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
 .main-container .intro-text p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
 }
 
 .main-container .animal-options {
-    width: 48%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+  width: 48%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .main-container .animal-options a {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #28a745;
-    color: white;
-    font-size: 1.2rem;
-    text-align: center;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #28a745;
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .main-container .animal-options a:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 /* Animal List and Cards */
 .animal-card {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    overflow: hidden;
-    width: 100%;
-    max-width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 300px;
 }
 
 .animal-card img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .animal-card .card-body {
-    padding: 15px;
+  padding: 15px;
 }
 
 .animal-card .card-body h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
 }
 
 .animal-card .card-body p {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
 }
 
 .animal-card .card-body .btn {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .animal-card .card-body .btn:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .submit_animal_form_header {
@@ -143,6 +145,10 @@ form {
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .submit_animal_form {
@@ -160,30 +166,34 @@ form input, form select, form textarea {
 }
 
 form input[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 15px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 form input[type="submit"]:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 /* Footer Styling */
 footer {
-    background-color: #343a40;
-    color: white;
-    padding: 20px 0;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  background-color: #343a40;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 footer p {
-    font-size: 1rem;
+  font-size: 1rem;
+}
+
+#logout {
+  all: revert;
 }

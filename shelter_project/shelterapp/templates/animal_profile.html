@@ -23,7 +23,9 @@
     <p><strong>Adoption Fee:</strong> ${{ animal.adoptionFee }}</p>
 
     <a href="{% url 'adoption_app' animal.animalID %}">
-    <button>Adopt {{ animal.name }}</button>
-</a>
+        <button>Adopt {{ animal.name }}</button>
+    </a>
+    <br>
+    <a href="{% url 'default_page' %}">Back to Main Page</a>
 </body>
 </html>

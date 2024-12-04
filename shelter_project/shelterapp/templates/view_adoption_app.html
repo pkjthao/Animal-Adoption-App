@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Animals</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
+    <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <li><a href="{% url 'adopter_dashboard' %}">Dashboard</a></li>
+    <h1>Adoption Requests</h1>
+
+    <table>
+        {% for request in adoption_requests %}
+           <tr>
+                <td>{{ request.animalID.name }}</td>
+                <td>{{ request.dateAdopted }}</td>
+                <td>{{ request.adoptionStatus }}</td>
+            </tr>
+        {% empty %}
+        <tr>
+            <td colspan="11">No requests have been made.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    {% comment %} <a href="{% url 'default_page' %}">Back to Main Page</a> {% endcomment %}
+</body>
+</html>

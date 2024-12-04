@@ -24,9 +24,19 @@ class AnimalForm(forms.ModelForm):
         }
         
 class AdoptionForm(forms.ModelForm):
+    staffAdministrator = forms.ModelChoiceField(
+        queryset=Staff.objects.all(),  # Fetch all staff members from the database
+        empty_label="Select a Staff Member",  # Placeholder for the dropdown
+        label="Staff Administrator"  # Label displayed in the form
+    )
+    
     class Meta:
         model = AdoptionRequest
-        fields = ['dateAdopted', 'adoptionStatus']
+        fields = ['dateAdopted', 'adoptionStatus', 'staffAdministrator']
+        labels = {
+            'dateAdopted': 'Date',
+            'adoptionStatus': 'Application Status'
+        }
         widgets = {
             'dateAdopted': forms.DateInput(attrs={'type': 'date'}),  # Add a date picker
         }
