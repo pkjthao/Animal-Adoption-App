@@ -17,10 +17,10 @@ urlpatterns = [
     # View donations
     path('donations/', views.view_donations, name='view_donations'),
     # Medical record search
-    path('medical-records/', views.medical_records_search, name='medical_records_search')
+    path('medical-records/', views.medical_records_search, name='medical_records_search'),
     #User login and signup
-    path('user/login/', auth_views.LoginView.as_view(template_name='user_login.html'), name='user_login'),
-    path('user/signup/', views.user_signup, name='user_signup'),
+    path('user/login/', auth_views.LoginView.as_view(template_name='adopter_login.html'), name='adopter_login'),
+    path('user/signup/', views.adopter_signup, name='adopter_signup'),
     # Staff login (no signup option)
     path('staff/login/', auth_views.LoginView.as_view(template_name='staff_login.html'), name='staff_login'),
     path('animal/<int:animalID>/', views.animal_profile, name='animal_profile'),

@@ -1,15 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import AnimalForm, AdoptionForm
+from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, CustomUserCreationForm, MedicalRecordForm
 from django.contrib.auth import login, authenticate, logout
-from .forms import AnimalForm, AdoptionForm, CustomUserCreationForm, MedicalRecordForm
-from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, CustomUser, Adopter
+from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, CustomUser, Adopter, Staff
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm
-from .models import Paycheck, Staff
-from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, AdoptionRequest, CustomUser, Adopter
 from django.shortcuts import render, get_object_or_404
 
 def submit_animal(request):

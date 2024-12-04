@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Animal, AdoptionRequest, CustomUser
 from .models import Animal, AdoptionRequest, CustomUser, Adopter, Staff, MedicalRecord
 
 class AnimalForm(forms.ModelForm):
