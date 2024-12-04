@@ -14,6 +14,21 @@
             <p>Welcome to your staff dashboard. Here you can manage staff activities.</p>
         </div>
 
+        <ul>
+            <li><a href="{% url 'view_animals' %}">View Animals in the Shelter</a></li>
+            <li><a href="{% url 'submit_animal' %}">Submit a New Animal</a></li>
+            <li><a href="{% url 'add_med_record' %}">Add Medical Record</a></li>
+            <li><a href="{% url 'view_shelters' %}">View Shelter Locations</a></li>
+            <li><a href="{% url 'view_paychecks' %}">View Employee Paychecks</a></li>
+            <li><a href="{% url 'view_medical_records' %}">View Medical Records</a></li>
+            <li><a href="{% url 'medical_records_search' %}">Medical Records Search</a></li>
+            <li><form method="POST" action="{% url 'user_logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger w-100">Sign Out</button>
+                </form>
+            </li>
+        </ul>
+
         <!-- View Aniamls Button -->
         <div class="mt-4">
             <a href="{% url 'view_animals' %}" class="btn btn-secondary w-100">View All Animals</a>

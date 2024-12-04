@@ -169,7 +169,7 @@ def staff_dashboard(request):
         staff_profile = request.user.staff_profile  # Access staff profile
         return render(request, 'staff_dashboard.html', {'profile': staff_profile})
     else:
-        return redirect('user_dashboard')  # Replace with your user dashboard URL
+        return redirect('adopter_login')  # Replace with your user dashboard URL
     
 @login_required
 def adoption_app(request, animalID):
@@ -177,7 +177,7 @@ def adoption_app(request, animalID):
     user = request.user
 
     # Ensure the user has an Adopter profile
-    adopter = get_object_or_404(Adopter, email=user.email)
+    adopter = get_object_or_404(Adopter, adopterID=user.id)
 
     # Get the specific animal
     animal = get_object_or_404(Animal, animalID=animalID)
@@ -232,3 +232,9 @@ def add_med_record(request):
         form.initial['animalID'] = selected_animal.animalID
         
     return render(request, 'add_med_record.html', context)
+
+@login_required
+def view_adoption_app(request):
+    adoption_requests = AdoptionRequest.objects.filter(adopterID=request.user.id).select_related('animalID', 'staffAdministrator')
+    
+    return render(request, 'view_adoption_app.html', {'adoption_requests': adoption_requests})

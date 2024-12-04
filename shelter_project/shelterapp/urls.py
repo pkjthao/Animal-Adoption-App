@@ -23,6 +23,8 @@ urlpatterns = [
     path('animal/<int:animalID>/', views.animal_profile, name='animal_profile'),
     path('adopt/<int:animalID>/', views.adoption_app, name='adoption_app'),
     path('medical-request/', views.add_med_record, name='add_med_record'),
+    path('adoption_confirmation/', views.adoption_confirmation, name='adoption_confirmation'),
+    path('adopt/view', views.view_adoption_app, name='view_adoption_app'),
 ]
 
 urlpatterns += [
