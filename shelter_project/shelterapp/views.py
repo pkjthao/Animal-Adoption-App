@@ -16,7 +16,7 @@ def submit_animal(request):
         form = AnimalForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('view_animals')  # Redirect to the list page
+            return redirect('default_page')  # Redirect to the list page
     else:
         form = AnimalForm()
 

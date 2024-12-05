@@ -228,10 +228,13 @@ footer p {
     height: 2rem;
 }
 
+#animal_gallery {
+    /* text-align: center; */
+}
+
 #animal_gallery li {
     display: inline-block;
-    padding-right: 2vw;
-    padding-left: 2vw;
+    padding-right: 1,5vw;
 }
 
 #animal_gallery img {
