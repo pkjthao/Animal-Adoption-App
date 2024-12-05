@@ -44,21 +44,21 @@
     </div>
 
     <div id="content">
-        <table>
-        {% for animal in animals %}
-            <li>
-                <img src="{% static 'shelterapp/images/animals/' %}{{ animal.animalID }}.png" alt="{{ animal.name }}" width="200" height="200">
-                <br>
-                <a href="{% url 'animal_profile' animal.animalID %}">
-                   Name: {{ animal.name }}, Age: {{ animal.age }}
-                </a>
-            </li>
-        {% empty %}
-        <tr>
-            <td colspan="11">No animals available.</td>
-        </tr>
-        {% endfor %}
-        </table>
+        <ul id="animal_gallery">
+            {% for animal in animals %}
+                <li>
+                    <img src="{% static 'shelterapp/images/animals/' %}{{ animal.animalID }}.png" alt="{{ animal.name }}">
+                    <br>
+                    <a href="{% url 'animal_profile' animal.animalID %}">
+                    Name: {{ animal.name }}, Age: {{ animal.age }}
+                    </a>
+                </li>
+            {% empty %}
+            <tr>
+                <td colspan="11">No animals available.</td>
+            </tr>
+            {% endfor %}
+        </ul>
     </div>
 </body>
 </html>
