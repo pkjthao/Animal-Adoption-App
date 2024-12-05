@@ -24,16 +24,23 @@ def submit_animal(request):
 
 def view_animals(request):
     animals = Animal.objects.all()
-    medical_records = MedicalRecord.objects.all()
-    return render(request, 'view_animals.html', {'animals': animals, 'medical_records': medical_records})
+    return render(request, 'view_animals.html', {'animals': animals})
 
 def view_shelters(request):
     shelters = ShelterLocation.objects.all()
     return render(request, 'view_shelters.html', {'shelters': shelters})
 
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
 def view_paychecks(request):
-    paychecks = Paycheck.objects.all()
-    return render(request, 'view_paychecks.html', {'paychecks': paychecks})
+    # Get the staff profile associated with the logged-in user
+    if request.user.is_staff:
+        staff = request.user.staff_profile  # Assuming staff_profile is a related name or property
+        # Filter paychecks based on the staff ID
+        paychecks = Paycheck.objects.filter(staffID=staff).select_related('staffID')  # Use appropriate field name
+        return render(request, 'view_paychecks.html', {'paychecks': paychecks})
+    else:
+        # Redirect adopters or non-staff users to the appropriate page
+        return redirect('adopter_dashboard')  # Replace with actual adopter dashboard URL name
 
 def view_employees(request):
     employees = Staff.objects.all()
