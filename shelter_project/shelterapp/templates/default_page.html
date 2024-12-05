@@ -10,8 +10,12 @@
 </head>
 <body>
     <div id="header">
-        <img src="{% static 'shelterapp/images/pawprint.png" alt="pawprint">
-        <h1>PawPrints Rescue Center</h1>
+        <a href="{% url 'default_page' %}">
+            <p id="title">
+                <img src="{% static 'shelterapp/images/' %}pawprint.png" alt="pawprint" id="logo">
+                PawPrints Rescue Center
+            </p>
+        </a>
 
         {% if user.is_authenticated %}
             <ul id="nav">
@@ -20,7 +24,7 @@
                 {% else %}
                     <li><a href="{% url 'adopter_dashboard' %}">Dashboard</a></li>
                 {% endif %}
-                <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
+                <li><a href="{% url 'default_page' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
                 <li>
                     <form id="logout" method="POST" action="{% url 'user_logout' %}">
@@ -31,12 +35,30 @@
             </ul>
         {% else %}
             <ul id="nav">
-                <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
+                <li><a href="{% url 'default_page' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
                 <li><a href="{% url 'adopter_login' %}">Login</a></li>
                 <li><a href="{% url 'adopter_signup' %}">Sign Up</a></li>
             </ul>
-    {% endif %}
+        {% endif %}
+    </div>
+
+    <div id="content">
+        <table>
+        {% for animal in animals %}
+            <li>
+                <img src="{% static 'shelterapp/images/animals/' %}{{ animal.animalID }}.png" alt="{{ animal.name }}" width="200" height="200">
+                <br>
+                <a href="{% url 'animal_profile' animal.animalID %}">
+                   Name: {{ animal.name }}, Age: {{ animal.age }}
+                </a>
+            </li>
+        {% empty %}
+        <tr>
+            <td colspan="11">No animals available.</td>
+        </tr>
+        {% endfor %}
+        </table>
     </div>
 </body>
 </html>

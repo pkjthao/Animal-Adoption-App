@@ -7,6 +7,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 
+def default_page(request):
+    animals = Animal.objects.all()
+    return render(request, 'default_page.html', {'animals': animals})
+
 def submit_animal(request):
     if request.method == 'POST':
         form = AnimalForm(request.POST)
@@ -41,8 +45,7 @@ def view_donations(request):
 
 def view_medical_records(request):
     medical_records = MedicalRecord.objects.all()
-    animals = Animal.objects.all()
-    return render(request, 'view_medical_records.html', {'medical_records': medical_records, 'animals': animals})
+    return render(request, 'view_medical_records.html', {'medical_records': medical_records})
 
 def medical_records_search(request):
     query = request.GET.get('q', '')  # Get the search term from the query parameter
@@ -62,9 +65,6 @@ def medical_records_search(request):
     return render(request, 'medical_records_search.html', {
         'medical_records': medical_records, 'query': query
     })
-
-def default_page(request):
-    return render(request, 'default_page.html')
 
 def user_logout(request):
     logout(request)  # Logs out the user
