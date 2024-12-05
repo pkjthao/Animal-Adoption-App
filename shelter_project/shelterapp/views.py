@@ -281,7 +281,7 @@ def profile_view(request):
             'Last Name': user.last_name,
             'Phone Number': user.adopter_profile.phone_number,  # Assuming related name or property
             'Email Address': user.email,
-            'Address': user.address,  # Replace with your field name
+            'Address': user.adopter_profile.address,  # Replace with your field name
         }
 
     return render(request, 'profile_view.html', {'profile_data': profile_data, 'is_staff': user.is_staff, 'dashboard_url': dashboard_url})
