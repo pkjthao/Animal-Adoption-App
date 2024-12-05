@@ -9,9 +9,9 @@
     <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <h1>Submit a New Animal</h1>
+    <h1 class="submit_animal_form_header">Submit a New Animal</h1>
 
-    <form method="post">
+    <form method="post" class="submit_animal_form">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Submit Animal</button>

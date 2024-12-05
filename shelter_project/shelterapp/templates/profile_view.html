@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-item {
+            margin: 10px 0;
+        }
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>
+                {% if is_staff %}
+                    Staff Profile
+                {% else %}
+                    User Profile
+                {% endif %}
+            </h1>
+        </div>
+        <div class="profile-details">
+            {% for label, value in profile_data.items %}
+                <div class="profile-item">
+                    <span class="label">{{ label }}:</span> {{ value }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Go Back to Dashboard Button -->
+    <a href="{{ dashboard_url }}">
+        <button>Go Back to Dashboard</button>
+    </a>
+</body>
+</html>
