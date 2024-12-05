@@ -254,3 +254,34 @@ def view_adoption_app(request):
     adoption_requests = AdoptionRequest.objects.filter(adopterID=request.user.id).select_related('animalID', 'staffAdministrator')
     
     return render(request, 'view_adoption_app.html', {'adoption_requests': adoption_requests})
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+@login_required(login_url='/')  # Redirect unauthenticated users to the home page
+def profile_view(request):
+    user = request.user
+    if user.is_staff:
+        dashboard_url = reverse('staff_dashboard')
+        # Staff profile details
+        profile_data = {
+            'First Name': user.first_name,
+            'Last Name': user.last_name,
+            'Phone Number': user.staff_profile.phone_number,  # Assuming related name or property
+            'Email Address': user.email,
+            'Position': user.staff_profile.position,
+            'Hire Date': user.staff_profile.hireDate,
+        }
+    else:
+        dashboard_url = reverse('adopter_dashboard')
+        # Adopter profile details
+        profile_data = {
+            'First Name': user.first_name,
+            'Last Name': user.last_name,
+            'Phone Number': user.adopter_profile.phone_number,  # Assuming related name or property
+            'Email Address': user.email,
+            'Address': user.address,  # Replace with your field name
+        }
+
+    return render(request, 'profile_view.html', {'profile_data': profile_data, 'is_staff': user.is_staff, 'dashboard_url': dashboard_url})
