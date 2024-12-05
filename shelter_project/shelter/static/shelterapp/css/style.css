@@ -216,3 +216,13 @@ footer p {
     width: 2rem;
     height: 2rem;
 }
+
+#animal_gallery li {
+    display: inline-block;
+    padding-right: 2vw;
+    padding-left: 2vw;
+}
+
+#animal_gallery img {
+    width: 20vw;
+}
