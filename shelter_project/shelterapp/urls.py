@@ -41,4 +41,5 @@ urlpatterns += [
     path('adopter/dashboard/', views.adopter_dashboard, name='adopter_dashboard'),
     path('staff/dashboard/', views.staff_dashboard, name='staff_dashboard'),
     path('logout/', views.user_logout, name='user_logout'),
+    path('profile/', views.profile_view, name='profile')
 ]
