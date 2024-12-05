@@ -186,3 +186,27 @@ footer p {
 #logout {
   all: revert;
 }
+
+#header {
+    background-color: #3c5092;
+    padding: 1em;
+}
+
+#header h1 {
+    color: #fff;
+}
+
+#nav {
+    text-align: right;
+    margin: 0;
+}
+
+#nav li {
+    display: inline-block;
+    padding-right: 2rem;
+}
+
+#nav a {
+    text-decoration: none;
+    color: #ffffff;
+}
