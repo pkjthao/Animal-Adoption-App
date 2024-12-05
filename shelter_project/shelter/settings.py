@@ -144,7 +144,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STAFF_LOGIN_REDIRECT_URL = '/staff/dashboard/'  # Replace with your staff dashboard URL
 
 # Redirect users to their dashboard
-USER_LOGIN_REDIRECT_URL = '/user/dashboard/'  # Replace with your user dashboard URL
+LOGIN_REDIRECT_URL = '/adopter/dashboard/'  # Replace with your user dashboard URL
 
-LOGIN_URL = '/user/login/'  # Default login URL
+LOGIN_URL = '/adopter/login/'  # Default login URL
 
