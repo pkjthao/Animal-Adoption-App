@@ -8,12 +8,30 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
     <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+    <style>
+        /* Custom button height */
+        .btn-custom {
+            padding: 15px 0;  /* Adds vertical padding to make buttons taller */
+            font-size: 1.1rem; /* Slightly increase the font size */
+        }
+
+        /* Custom button for 'View Adoption Applications' */
+        .btn-adoption-requests {
+            background-color: #b12ac9;  /* Dark Red color */
+            color: white;  /* White text */
+        }
+
+        .btn-adoption-requests:hover {
+            background-color: #6b25a0;  /* Darker red on hover */
+            color: white;  /* White text */
+        }
+    </style>
 </head>
 <body>
     <div id="header">
         <a href="{% url 'default_page' %}">
             <p id="title">
-                <img src="{% static 'shelterapp/images/' %}pawprint.png" alt="pawprint" id="logo">
+                <img src="{% static 'shelterapp/images/pawprint.png' %}" alt="pawprint" id="logo">
                 PawPrints Rescue Center
             </p>
         </a>
@@ -51,21 +69,24 @@
             <p>Welcome to your adopter dashboard. Here you can manage your activities.</p>
         </div>
 
-        <div class="mt-4 text-center">
-            <!-- Turn the links into buttons -->
-    
-            <a href="{% url 'view_adoption_app' %}" class="btn btn-primary w-100 mb-3">View All Adoption Applications</a>
-
-            <!-- View Profile Button -->
-            <a href="{% url 'profile_view' %}" class="btn btn-primary w-100 mb-3">View Profile</a>
-
-    
-            <!-- Home Button -->
-            <div class="mt-4 text-center">
-                <a href="{% url 'default_page' %}" class="btn btn-primary w-100">Home</a>
+        <!-- Horizontal Button Row -->
+        <div class="row justify-content-center mt-4">
+            <!-- View Adoption Applications Button (Custom Dark Red color) -->
+            <div class="col-12 col-md-4 mb-3">
+                <a href="{% url 'view_adoption_app' %}" class="btn btn-adoption-requests w-100 btn-custom">View All Adoption Applications</a>
             </div>
-    
+
+            <!-- View Profile Button (Custom color: Green) -->
+            <div class="col-12 col-md-4 mb-3">
+                <a href="{% url 'profile_view' %}" class="btn btn-success w-100 btn-custom">View Profile</a>
+            </div>
+
+            <!-- Home Button (Custom color: Light Blue) -->
+            <div class="col-12 col-md-4 mb-3">
+                <a href="{% url 'default_page' %}" class="btn btn-primary w-100 btn-custom">Home</a>
+            </div>
         </div>
+    
     </div>
 </body>
 </html>
