@@ -135,23 +135,34 @@ header h1 {
   background-color: #0056b3;
 }
 
+.submit_animal_form_header {
+    text-align: center;  /* Centers the text horizontally */
+}
+
 /* Form Styling */
 form {
+    background-color: #c5e3f7;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-form input,
-form select,
-form textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+.submit_animal_form {
+    max-width: 700px;  /* Make the form narrower */
+    margin: 20px auto;  /* Center the form on the page */
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
 }
 
 form input[type="submit"] {
