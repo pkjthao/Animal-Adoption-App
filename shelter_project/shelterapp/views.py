@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, CustomUser, Adopter, Staff
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.shortcuts import render, get_object_or_404
+from django.conf import settings
 
 def submit_animal(request):
     if request.method == 'POST':
@@ -95,9 +95,9 @@ def adopter_login(request):
     if request.user.is_authenticated:
         # Redirect to the appropriate dashboard based on user type (adopter or staff)
         if request.user.is_staff:
-            return redirect('staff_dashboard')  # Replace with actual staff dashboard URL name
+            return redirect('staff_dashboard')  # Redirect to the staff dashboard
         else:
-            return redirect('adopter_dashboard')  # Replace with actual adopter dashboard URL name
+            return redirect('adopter_dashboard')  # Redirect to the adopter dashboard
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -105,16 +105,18 @@ def adopter_login(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user)  # Log the user in
-            
+            if user.is_staff:
+                # Error message for attempting to log into adopter form as staff
+                error = "You are trying to log in as a staff member through the adopter login form."
+                return render(request, 'adopter_login.html', {'error': error})
+
+            login(request, user)  # Log the adopter user in
+
             # Check if 'next' is provided in the request and redirect to that URL, otherwise to the dashboard
             next_url = request.POST.get('next')  # Get next from POST (this is passed in the login form)
             if not next_url:
-                # Redirect to adopter or staff dashboard based on the user type
-                if user.is_staff:
-                    next_url = reverse('staff_dashboard')  # Replace with actual staff dashboard URL
-                else:
-                    next_url = reverse('adopter_dashboard')  # Replace with actual adopter dashboard URL
+                # Redirect to adopter dashboard
+                next_url = reverse('adopter_dashboard')  # Replace with actual adopter dashboard URL
             return HttpResponseRedirect(next_url)  # Redirect to the correct page
         else:
             # Invalid login, show error message
@@ -127,49 +129,56 @@ def staff_login(request):
     if request.user.is_authenticated:
         # Redirect to the staff dashboard if the user is staff
         if request.user.is_staff:
-            return redirect('staff_dashboard')  # Replace with actual staff dashboard URL
+            return redirect(settings.STAFF_LOGIN_REDIRECT_URL)
+        # Redirect to the user dashboard if the user is not staff
         else:
-            return redirect('adopter_dashboard')  # Redirect to adopter dashboard if the user is not staff
-    
+            return redirect(settings.USER_LOGIN_REDIRECT_URL)
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
 
-        if user is not None and user.is_staff:
+        if user is not None:
+            if not user.is_staff:
+                # Error message for attempting to log into staff form as adopter
+                error = "You are trying to log in as an adopter through the staff login form."
+                return render(request, 'staff_login.html', {'error': error})
+
             login(request, user)
-            return redirect('staff_dashboard')  # Redirect to the staff dashboard
+            # Redirect to the appropriate dashboard based on user type
+            if user.is_staff:
+                return redirect(settings.STAFF_LOGIN_REDIRECT_URL)  # Redirect to staff dashboard
+            else:
+                return redirect(settings.USER_LOGIN_REDIRECT_URL)  # Redirect to user dashboard
         else:
-            # Provide detailed error messages for invalid credentials or non-staff users
-            error = "Invalid credentials or user is not a staff member."
-            if user is None:
-                error = "Authentication failed. Please check your username and password."
-            elif not user.is_staff:
-                error = "The logged-in user is not a staff member, but an adopter."
-
+            error = "Invalid credentials."
             return render(request, 'staff_login.html', {'error': error})
-    
-    return render(request, 'staff_login.html')
 
-@login_required
-def adopter_dashboard(request):
-    if not request.user.is_staff_user:
-        adopter_profile = request.user.adopter_profile  # Access adopter profile
-        return render(request, 'adopter_dashboard.html', {'profile': adopter_profile})
-    else:
-        return redirect('staff_login')  # Redirect staff users away
+    return render(request, 'staff_login.html')
 
 def animal_profile(request, animalID):
     animal = get_object_or_404(Animal, animalID=animalID)
     return render(request, 'animal_profile.html', {'animal': animal})
 
-@login_required
+
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
+def adopter_dashboard(request):
+    # Check if the user is already on the adopter dashboard
+    if request.user.is_staff:
+        # Redirect to the staff dashboard if the user is staff
+        return redirect('staff_dashboard')  # Replace with actual staff dashboard URL name
+    # Otherwise, they are an adopter, so no redirection needed
+    return render(request, 'adopter_dashboard.html')
+
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
 def staff_dashboard(request):
-    if request.user.is_staff_user:
-        staff_profile = request.user.staff_profile  # Access staff profile
-        return render(request, 'staff_dashboard.html', {'profile': staff_profile})
-    else:
-        return redirect('adopter_login')  # Replace with your user dashboard URL
+    # Check if the user is already on the staff dashboard
+    if not request.user.is_staff:
+        # Redirect to the adopter dashboard if the user is not staff
+        return redirect('adopter_dashboard')  # Replace with actual adopter dashboard URL name
+    # Otherwise, they are staff, so no redirection needed
+    return render(request, 'staff_dashboard.html')
     
 @login_required
 def adoption_app(request, animalID):

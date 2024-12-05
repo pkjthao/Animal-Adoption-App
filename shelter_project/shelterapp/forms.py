@@ -107,3 +107,54 @@ class MedicalRecordForm(forms.ModelForm):
         widgets = {
             'dateAdopted': forms.DateInput(attrs={'type': 'date'}),  # Add a date picker
         }
+        
+class StaffAdminForm(forms.ModelForm):
+    # Fields for CustomUser
+    username = forms.CharField(max_length=150, required=True)
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=False)  # Optional password field
+
+    # Field for phone number with (XXX) XXX-XXXX format validation
+    phone_number = forms.RegexField(
+        regex=r'^\(\d{3}\) \d{3}-\d{4}$',
+        max_length=14,
+        required=True,
+        label="Phone Number",
+        error_messages={
+            'invalid': 'Phone number must be in the format (XXX) XXX-XXXX.'
+        }
+    )
+
+    class Meta:
+        model = Staff
+        fields = ['position', 'phone_number', 'hireDate', 'salary']
+
+    def save(self, commit=True):
+        # First, create or retrieve the CustomUser
+        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
+        first_name = self.cleaned_data['first_name']
+        last_name = self.cleaned_data['last_name']
+        password = self.cleaned_data['password']
+
+        if not self.instance.user_id:  # Check if this staff instance has an associated user
+            # Create a new CustomUser if it doesn't exist
+            user = CustomUser.objects.create_user(
+                username=username,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                is_staff=True,
+                password=password or 'defaultpassword123'  # Provide a default password if not set
+            )
+            # Now link this user to the Staff instance
+            self.instance.user = user
+
+        # Now create or update the Staff profile
+        staff = super().save(commit=False)
+        if commit:
+            staff.save()  # Save the Staff profile
+
+        return staff
