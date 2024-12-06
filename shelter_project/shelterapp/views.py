@@ -17,7 +17,7 @@ def submit_animal(request):
         form = AnimalForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('default_page')  # Redirect to the list page
+            return redirect('view_animals')  # Redirect to the list page
     else:
         form = AnimalForm()
 
@@ -193,13 +193,13 @@ def staff_dashboard(request):
     # Otherwise, they are staff, so no redirection needed
     return render(request, 'staff_dashboard.html')
     
-@login_required(login_url='/')  # Redirect unauthenticated users to home page
+@login_required(login_url='/')  # Redirect unauthenticated users to home page(login_url='/')
 def adoption_app(request, animalID):
     # Get the logged-in user
     user = request.user
 
     # Ensure the user has an Adopter profile
-    adopter = get_object_or_404(Adopter, adopterID=user.id)
+    adopter = get_object_or_404(Adopter, adopterID=user.adopter_profile.adopterID)
 
     # Get the specific animal
     animal = get_object_or_404(Animal, animalID=animalID)
