@@ -8,6 +8,22 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
     <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+    <script>
+        function formatPhoneNumber(input) {
+            const value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+            let formatted = '';
+            if (value.length > 0) {
+                formatted += '(' + value.substring(0, 3); // Area code
+            }
+            if (value.length >= 4) {
+                formatted += ') ' + value.substring(3, 6); // First three digits after area code
+            }
+            if (value.length >= 7) {
+                formatted += '-' + value.substring(6, 10); // Last four digits
+            }
+            input.value = formatted; // Set the input value
+        }
+    </script>
 </head>
 <body>
     <div id="header">
@@ -69,8 +85,16 @@
         </div>
         
         <div>
-            <label for="id_phone_number">Phone Number:</label>
-            {{ form.phone_number }}
+            <label for="id_phone_number">Phone Number</label>
+            <input type="text" id="id_phone_number" name="phone_number" placeholder="(XXX) XXX-XXXX" 
+                   oninput="formatPhoneNumber(this)" value="{{ form.phone_number.value }}" class="form-control">
+            {% if form.phone_number.errors %}
+                <div class="text-danger">
+                    {% for error in form.phone_number.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
         
         <div>

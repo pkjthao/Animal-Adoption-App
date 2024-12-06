@@ -62,9 +62,11 @@
     <p><strong>Adoption Fee:</strong> ${{ animal.adoptionFee }}</p>
 
     {% if user.is_authenticated %}
-        <a href="{% url 'adoption_app' animal.animalID %}">
-            <button>Adopt {{ animal.name }}</button>
-        </a>
+        {% if not animal.adoptedOrNot %}
+            <a href="{% url 'adoption_app' animal.animalID %}">
+                <button>Adopt {{ animal.name }}</button>
+            </a>
+        {% endif %}
     {% else %}
         <p>Login to adopt {{animal.name}}</p>
     {% endif %}

@@ -68,10 +68,34 @@
     {% if form %}
     <form method="post">
         {% csrf_token %}
-        <input type="hidden" name="adoption_id" value="{{ selected_request.adoptionID }}">  <!-- Hidden input for adoption_id -->
+        <input type="hidden" name="adoption_id" value="{{ selected_request.adoptionID }}">
         <fieldset>
             <legend>Update Adoption Request Details</legend>
             {{ form.as_p }}
+            
+            <!-- JavaScript to show/hide dateAdopted field based on adoptionStatus -->
+            <script type="text/javascript">
+                document.addEventListener("DOMContentLoaded", function() {
+                    var adoptionStatusField = document.getElementById("id_adoptionStatus");
+                    var dateAdoptedField = document.getElementById("id_dateAdopted").parentElement;
+
+                    // Function to toggle the visibility of the dateAdopted field
+                    function toggleDateField() {
+                        if (adoptionStatusField.value === "accepted") {
+                            dateAdoptedField.style.display = "block"; // Show date field
+                        } else {
+                            dateAdoptedField.style.display = "none"; // Hide date field
+                        }
+                    }
+
+                    // Initialize the visibility of dateAdopted field based on current adoptionStatus value
+                    toggleDateField();
+
+                    // Add event listener to change visibility when adoptionStatus changes
+                    adoptionStatusField.addEventListener("change", toggleDateField);
+                });
+            </script>
+
             {% if selected_request and selected_request.adoptionStatus == 'accepted' %}
                 <p style="color: red;">This adoption request has already been accepted and cannot be modified.</p>
             {% else %}
@@ -79,6 +103,6 @@
             {% endif %}
         </fieldset>
     </form>
-    {% endif %}    
+    {% endif %}
 </body>
 </html>

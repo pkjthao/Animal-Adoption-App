@@ -86,7 +86,7 @@ class ShelterLocation(models.Model):
 
 class Donation(models.Model):
     donationID = models.AutoField(primary_key=True)
-    locationID = models.ForeignKey(ShelterLocation, on_delete=models.CASCADE)
+    locationID = models.ForeignKey('ShelterLocation', on_delete=models.CASCADE)
     amount = models.IntegerField()
     donationDate = models.DateField()
     name = models.CharField(max_length=100)
@@ -155,7 +155,7 @@ class MedicalRecord(models.Model):
     medicalID = models.AutoField(primary_key=True)
     animalID = models.ForeignKey(Animal, on_delete=models.CASCADE)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
-    diagnosis = models.CharField(max_length=200)
+    diagnosis = models.TextField()
     treatment = models.TextField()
     date = models.DateField()
     note = models.TextField()

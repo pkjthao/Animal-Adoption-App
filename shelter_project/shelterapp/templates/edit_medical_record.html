@@ -82,18 +82,56 @@
     </form>
 
     <br>
-
-    {% if selected_record %}
-        <!-- Display the form to update the selected medical record -->
-        <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="medical_id" value="{{ selected_record.medicalID }}">  <!-- Hidden input for medical_id -->
-            <fieldset>
-                <legend>Update Medical Record Details</legend>
-                {{ form.as_p }}
-                <button type="submit">Update Medical Record</button>
-            </fieldset>
-        </form>
+    {% if selected_record and form %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="medical_id" value="{{ selected_record.medicalID }}"> <!-- Hidden input for medical_id -->
+        <fieldset>
+            <legend>Update Medical Record Details</legend>
+            
+            <!-- Animal ID Field (Disabled) -->
+            <div>
+                <label for="id_animalID">Animal:</label>
+                <input type="text" id="id_animalID" name="animalID" value="{{ selected_record.animalID }}" disabled>
+            </div>
+            
+            <!-- Staff ID Field (Disabled) -->
+            <div>
+                <label for="id_staffID">Staff:</label>
+                <input type="text" id="id_staffID" name="staffID" value="{{ selected_record.staffID }}" disabled>
+            </div>
+            
+            <!-- Diagnosis Field -->
+            <div>
+                <label for="id_diagnosis">Diagnosis: </label>
+                <input type="text" id="id_diagnosis" name="diagnosis" value="{{ selected_record.diagnosis }}">
+            </div>
+            
+            <!-- Treatment Field -->
+            <div>
+                <label for="id_treatment">Treatment:</label>
+                <input type="text" id="id_treatment" name="treatment" value="{{ selected_record.treatment }}">
+            </div>
+            
+            <!-- Date Field -->
+            <div>
+                <label for="id_date">Date:</label>
+                <input 
+                    type="date" 
+                    id="id_date" 
+                    name="date" 
+                    value="{{ formatted_date }}">
+            </div>
+            
+            <!-- Note Field -->
+            <div>
+                <label for="id_note">Note:</label>
+                <textarea id="id_note" name="note">{{ selected_record.note }}</textarea>
+            </div>
+        </fieldset>
+        <button type="submit">Update Medical Record</button>
+    </form>
     {% endif %}
+    
 </body>
 </html>
