@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Animal, AdoptionRequest, CustomUser, Adopter, Staff, MedicalRecord, ShelterLocation
+from .models import Animal, AdoptionRequest, CustomUser, Adopter, Staff, MedicalRecord, ShelterLocation, Donation
+from django.utils.timezone import now  # For setting default donation date
 
 class AnimalForm(forms.ModelForm):
     locationID = forms.ChoiceField(
@@ -263,6 +264,35 @@ class EditMedicalRecordForm(forms.ModelForm):
             instance.animalID.healthStatus = diagnosis
             instance.animalID.save()  # Save the updated animal record
         
+        if commit:
+            instance.save()
+        return instance
+    
+
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ['locationID', 'amount', 'name', 'phone_number', 'email', 'address']
+        widgets = {
+            'phone_number': forms.TextInput(attrs={'placeholder': '(XXX) XXX-XXXX'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add placeholder and styling
+        self.fields['name'].widget.attrs.update({'placeholder': 'Your Name'})
+        self.fields['amount'].widget.attrs.update({'placeholder': 'Donation Amount'})
+        self.fields['email'].widget.attrs.update({'placeholder': 'Your Email'})
+        self.fields['address'].widget.attrs.update({'placeholder': 'Your Address'})
+
+        # You might want to ensure that 'locationID' is a dropdown (select box)
+        self.fields['locationID'].queryset = ShelterLocation.objects.all()
+
+    def save(self, commit=True):
+        # Automatically set the donation date to today
+        instance = super().save(commit=False)
+        instance.donationDate = now().date()
         if commit:
             instance.save()
         return instance

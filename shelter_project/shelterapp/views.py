@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm, EditAdoptionRequestForm, EditMedicalRecordForm
+from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm, EditAdoptionRequestForm, EditMedicalRecordForm, DonationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, Adopter, Staff
@@ -428,3 +428,22 @@ def edit_medical_record(request):
         'search_staff_name': search_staff_name,
         'search_diagnosis': search_diagnosis,
     })
+    
+def submit_donation(request):
+    if request.method == 'POST':
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            # Save the donation
+            donation = form.save()
+
+            # Update the corresponding shelter's funds
+            shelter = get_object_or_404(ShelterLocation, locationID=donation.locationID)
+            shelter.funds += donation.amount  # Increase the shelter's funds by the donation amount
+            shelter.save()  # Save the updated shelter funds
+
+            # After the donation is processed, render the thank you page
+            return render(request, 'thank_you.html')
+    else:
+        form = DonationForm()
+    
+    return render(request, 'submit_donation.html', {'form': form})

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate to Shelter</title>
+</head>
+<body>
+    <h1>Make a Donation</h1>
+    <p>Your support helps us provide a safe haven for animals in need.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div>
+            <label for="id_locationID">Shelter Location:</label>
+            {{ form.locationID }}
+        </div>
+        
+        <div>
+            <label for="id_amount">Donation Amount:</label>
+            {{ form.amount }}
+        </div>
+        
+        <div>
+            <label for="id_name">Your Name:</label>
+            {{ form.name }}
+        </div>
+        
+        <div>
+            <label for="id_phone_number">Phone Number:</label>
+            {{ form.phone_number }}
+        </div>
+        
+        <div>
+            <label for="id_email">Email:</label>
+            {{ form.email }}
+        </div>
+        
+        <div>
+            <label for="id_address">Address:</label>
+            {{ form.address }}
+        </div>
+        
+        <button type="submit">Submit Donation</button>
+    </form>
+    <a href="{% url 'default_page' %}" class="btn btn-secondary mb-3">Go Back to Home</a>
+</body>
+</html>
