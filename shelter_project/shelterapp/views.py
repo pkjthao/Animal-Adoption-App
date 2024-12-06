@@ -6,17 +6,37 @@ from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
+from django.db.models import Q
 
 def default_page(request):
     animals = Animal.objects.all()
     return render(request, 'default_page.html', {'animals': animals})
 
-@login_required(login_url='/')  # Redirect unauthenticated users to home page
+@login_required(login_url='/')  # Redirect unauthenticated users to the home page
 def submit_animal(request):
     if request.method == 'POST':
         form = AnimalForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Get the location ID from the form
+            location_id = form.cleaned_data['locationID']
+            shelter = get_object_or_404(ShelterLocation, locationID=location_id)
+
+            # Check if adding the animal would exceed the shelter's capacity
+            if shelter.currentOccupancy + 1 > shelter.capacity:
+                # If capacity would be exceeded, return an error message
+                return render(request, 'submit_animal.html', {
+                    'form': form,
+                    'error': f"Adding this animal would exceed the shelter's capacity of {shelter.capacity}."
+                })
+
+            # Save the new animal
+            animal = form.save()
+
+            # If the animal is not adopted, update the current occupancy
+            if animal.adoptedOrNot == 0:
+                shelter.currentOccupancy = Animal.objects.filter(locationID=shelter.locationID, adoptedOrNot=0).count()
+                shelter.save()
+
             return redirect('view_animals')  # Redirect to the list page
     else:
         form = AnimalForm()
@@ -51,31 +71,33 @@ def view_donations(request):
     donations = Donation.objects.all()
     return render(request, 'view_donations.html', {'donations': donations})
 
+@login_required(login_url='/')  # Ensure only logged-in users can access
 def view_medical_records(request):
+    if not request.user.is_staff:
+        return redirect('default_page')  # Redirect to home if the user is not a staff member
     medical_records = MedicalRecord.objects.all()
     return render(request, 'view_medical_records.html', {'medical_records': medical_records})
 
+@login_required(login_url='/')  # Ensure only logged-in users can access
 def medical_records_search(request):
     # Check if the user is staff
     if not request.user.is_staff:
         return redirect('default_page')  # Redirect to home if the user is not a staff member
-    
-    query = request.GET.get('q', '')  # Get the search term from the query parameter
-    
-    # If there's a search query, filter medical records based on it
+
+    query = request.GET.get('q', '').strip()  # Get and clean the search term from the query parameter
+    medical_records = MedicalRecord.objects.all()  # Default to all records
+
     if query:
-        medical_records = MedicalRecord.objects.filter(
+        # Apply an OR condition across all fields
+        medical_records = medical_records.filter(
             Q(diagnosis__icontains=query) |
             Q(animalID__name__icontains=query) |
-            Q(staffID__user__firstName__icontains=query) |  # Search by first name in CustomUser
-            Q(staffID__user__lastName__icontains=query)     # Search by last name in CustomUser
-        )
-    else:
-        medical_records = MedicalRecord.objects.all()  # Show all records if no query is provided
-
+            Q(staffID__user__first_name__icontains=query) |
+            Q(staffID__user__last_name__icontains=query))
     # Render the page with the medical records and the query
     return render(request, 'medical_records_search.html', {
-        'medical_records': medical_records, 'query': query
+        'medical_records': medical_records,
+        'query': query
     })
 
 
@@ -301,7 +323,7 @@ def profile_view(request):
 
 
 
-@login_required(login_url='/')  # Redirect unauthenticated users to home page
+@login_required(login_url='/')  # Redirect unauthenticated users to the home page
 def edit_adoption_request(request):
     # Check if the user is staff
     if not request.user.is_staff:
@@ -332,6 +354,11 @@ def edit_adoption_request(request):
                             animal = selected_request.animalID
                             animal.adoptedOrNot = 1
                             animal.save()
+
+                            # Update the current occupancy of the shelter
+                            shelter = get_object_or_404(ShelterLocation, locationID=animal.locationID)
+                            shelter.currentOccupancy = Animal.objects.filter(locationID=shelter.locationID, adoptedOrNot=0).count()
+                            shelter.save()
 
                         form.save()
                         return redirect('staff_dashboard')
