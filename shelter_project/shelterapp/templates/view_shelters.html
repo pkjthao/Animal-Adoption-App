@@ -49,10 +49,10 @@
     
     <h1>Shelter Locations</h1>
 
-    <table>
+    <table class="data">
         <tr>
             <th>Location Name</th>
-            <th>Address</th>
+            <th id="address">Address</th>
             <th>Phone Number</th>
             <th>Capacity</th>
             <th>Current Occupancy</th>
@@ -62,7 +62,7 @@
         <tr>
             <td>{{ shelter.locationName }}</td>
             <td>{{ shelter.address }}</td>
-            <td>{{ shelter.phoneNumber }}</td>
+            <td>{{ shelter.phone_number }}</td>
             <td>{{ shelter.capacity }}</td>
             <td>{{ shelter.currentOccupancy }}</td>
             <td>{{ shelter.funds }}</td>

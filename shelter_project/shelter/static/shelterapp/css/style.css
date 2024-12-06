@@ -390,3 +390,32 @@ footer p {
   background-color: #6b25a0;  /* Darker red on hover */
   color: white;  /* White text */
 }
+
+
+
+.data {
+    margin: auto;
+    margin-top: 5vw;
+    border-style: solid;
+}
+
+.data th {
+    padding-right: 3vw;
+    padding-bottom: 2vw;
+    padding-top: 1vw;
+    padding-left: 1vw;
+    font-size: 1.4vw;
+}
+
+#address {
+    padding-right: 10vw;
+}
+
+.data td {
+    padding-left: 1vw;
+    padding-bottom: 1vw;
+}
+
+table, th, td {
+  border: 1px solid;
+}
