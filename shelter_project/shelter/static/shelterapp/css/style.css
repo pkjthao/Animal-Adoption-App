@@ -231,6 +231,7 @@ footer p {
 }
 
 #animal_gallery {
+    margin-top: 2vw;
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
     gap: 1.5vw; /* Add spacing between grid items */
@@ -246,9 +247,20 @@ footer p {
     width: 20vw;
 }
 
+#banner {
+    width: 100%;
+    position: relative;
+    bottom: 0.5vw;
+}
 
-
-
+#banner-title {
+    margin: auto;
+    position: relative;
+    z-index: 1;
+    top: 10vw;
+    width: fit-content;
+    font-size: 2vw;
+}
 
 
  /* Custom button height and text centering */
@@ -336,7 +348,29 @@ footer p {
 
 
 
-
+#profile-body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+}
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.profile-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.profile-item {
+    margin: 10px 0;
+}
+.label {
+    font-weight: bold;
+}
 
 
 /*Adopter dashboard*/

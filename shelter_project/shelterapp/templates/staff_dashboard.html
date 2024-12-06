@@ -23,9 +23,9 @@
             <ul id="nav">
                 <li><a href="{% url 'default_page' %}">Home</a></li>
                 {% if user.is_staff %}
-                    <li><a href="{% url 'staff_dashboard' %}" class="btn btn-secondary w-100">Dashboard</a></li>
+                    <li><a href="{% url 'staff_dashboard' %}">Dashboard</a></li>
                 {% else %}
-                    <li><a href="{% url 'adopter_dashboard' %}" class="btn btn-secondary w-100">Dashboard</a></li>
+                    <li><a href="{% url 'adopter_dashboard' %}">Dashboard</a></li>
                 {% endif %}
                 <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
@@ -77,10 +77,6 @@
             </div>
             <div class="col-12 col-md-4">
                 <a href="{% url 'profile_view' %}" class="btn btn-success w-100 btn-custom">View Profile</a>
-            </div>
-            <!-- Home Button -->
-            <div class="col-12 col-md-4">
-                <a href="{% url 'default_page' %}" class="btn btn-primary w-100 btn-custom">Home</a>
             </div>
             <!-- Edit Adoption Request Button -->
             <div class="col-12 col-md-4">

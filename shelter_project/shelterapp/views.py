@@ -199,7 +199,7 @@ def adoption_app(request, animalID):
     user = request.user
 
     # Ensure the user has an Adopter profile
-    adopter = get_object_or_404(Adopter, adopterID=user.id)
+    adopter = get_object_or_404(Adopter, adopterID=user.adopter_profile.adopterID)
 
     # Get the specific animal
     animal = get_object_or_404(Animal, animalID=animalID)
