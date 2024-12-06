@@ -199,8 +199,10 @@ footer p {
 }
 
 #header {
-    background-color: #3c5092;
+    background-color: #2d4c7c;
     padding: 1em;
+    position: relative;
+    z-index: 1;
 }
 
 #title {
@@ -229,14 +231,32 @@ footer p {
 }
 
 #animal_gallery {
-    /* text-align: center; */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 1.5vw; /* Add spacing between grid items */
+    padding: 1vw; /* Optional padding */
 }
 
 #animal_gallery li {
-    display: inline-block;
-    padding-right: 1,5vw;
+    list-style-type: none; /* Remove default list styling */
+    text-align: center;
 }
 
 #animal_gallery img {
-    width: 20vw;
+    width: 100%; /* Adjust to fit within the grid item */
+    border-radius: 10px; /* Optional styling */
+}
+
+#banner {
+    width: 100%;
+    position: relative;
+    bottom: 25vw;
+}
+
+#banner-title {
+    position: relative;
+    z-index: 1;
+    font-size: 4vw;
+    margin-top: 10vw;
+    text-align: center;
 }

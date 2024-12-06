@@ -19,12 +19,13 @@
 
         {% if user.is_authenticated %}
             <ul id="nav">
+                <li><a href="{% url 'default_page' %}">Home</a></li>
                 {% if user.is_staff %}
                     <li><a href="{% url 'staff_dashboard' %}">Dashboard</a></li>
                 {% else %}
                     <li><a href="{% url 'adopter_dashboard' %}">Dashboard</a></li>
                 {% endif %}
-                <li><a href="{% url 'default_page' %}">Our Animals</a></li>
+                <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
                 <li>
                     <form id="logout" method="POST" action="{% url 'user_logout' %}">
@@ -35,7 +36,8 @@
             </ul>
         {% else %}
             <ul id="nav">
-                <li><a href="{% url 'default_page' %}">Our Animals</a></li>
+                <li><a href="{% url 'default_page' %}">Home</a></li>
+                <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
                 <li><a href="{% url 'adopter_login' %}">Login</a></li>
                 <li><a href="{% url 'adopter_signup' %}">Sign Up</a></li>
@@ -44,8 +46,10 @@
     </div>
 
     <div id="content">
+        <h1 id="banner-title">Get Ready to Adopt Your New Best Friend</h1>
+        <img src="{% static 'shelterapp/images/' %}banner.jpg" alt="banner" id="banner">
         <ul id="animal_gallery">
-            {% for animal in animals %}
+            {% for animal in animals|slice:":8" %}
                 <li>
                     <img src="{% static 'shelterapp/images/animals/' %}{{ animal.animalID }}.png" alt="{{ animal.name }}">
                     <br>
@@ -59,6 +63,11 @@
             </tr>
             {% endfor %}
         </ul>
+        <div style="text-align: center; margin-top: 20px;">
+            {% if animals.count > 8 %}
+                <a href="{% url 'view_animals' %}" class="view-more-btn">View More</a>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>

@@ -10,7 +10,7 @@
     <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <div id="header">
+   <div id="header">
         <a href="{% url 'default_page' %}">
             <p id="title">
                 <img src="{% static 'shelterapp/images/' %}pawprint.png" alt="pawprint" id="logo">
@@ -20,12 +20,13 @@
 
         {% if user.is_authenticated %}
             <ul id="nav">
+                <li><a href="{% url 'default_page' %}">Home</a></li>
                 {% if user.is_staff %}
                     <li><a href="{% url 'staff_dashboard' %}">Dashboard</a></li>
                 {% else %}
                     <li><a href="{% url 'adopter_dashboard' %}">Dashboard</a></li>
                 {% endif %}
-                <li><a href="{% url 'default_page' %}">Our Animals</a></li>
+                <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
                 <li>
                     <form id="logout" method="POST" action="{% url 'user_logout' %}">
@@ -36,13 +37,15 @@
             </ul>
         {% else %}
             <ul id="nav">
-                <li><a href="{% url 'default_page' %}">Our Animals</a></li>
+                <li><a href="{% url 'default_page' %}">Home</a></li>
+                <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
                 <li><a href="{% url 'adopter_login' %}">Login</a></li>
                 <li><a href="{% url 'adopter_signup' %}">Sign Up</a></li>
             </ul>
         {% endif %}
     </div>
+
     <div class="container mt-5">
         <h2 class="text-center">Welcome, {{ user.first_name }}!</h2>
         
