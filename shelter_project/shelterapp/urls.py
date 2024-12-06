@@ -43,3 +43,8 @@ urlpatterns += [
     path('logout/', views.user_logout, name='user_logout'),
     path('profile/', views.profile_view, name='profile_view')
 ]
+
+# Edit Forms
+urlpatterns += [
+    path('edit_adoption_request/', views.edit_adoption_request, name='edit_adoption_request'),
+]

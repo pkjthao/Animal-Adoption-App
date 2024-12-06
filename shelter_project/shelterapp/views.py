@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm
+from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm, EditAdoptionRequestForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, CustomUser, Adopter, Staff
+from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, Adopter, Staff
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
@@ -251,13 +251,15 @@ def add_med_record(request):
 
 @login_required
 def view_adoption_app(request):
-    adoption_requests = AdoptionRequest.objects.filter(adopterID=request.user.id).select_related('animalID', 'staffAdministrator')
+    # Check if the user is a staff member
+    if request.user.is_staff:
+        # If the user is a staff member, show all adoption requests
+        adoption_requests = AdoptionRequest.objects.all().select_related('animalID', 'staffAdministrator')
+    else:
+        # If the user is an adopter, show only their adoption requests
+        adoption_requests = AdoptionRequest.objects.filter(adopterID=request.user.id).select_related('animalID', 'staffAdministrator')
     
     return render(request, 'view_adoption_app.html', {'adoption_requests': adoption_requests})
-
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 
 @login_required(login_url='/')  # Redirect unauthenticated users to the home page
 def profile_view(request):
@@ -285,3 +287,52 @@ def profile_view(request):
         }
 
     return render(request, 'profile_view.html', {'profile_data': profile_data, 'is_staff': user.is_staff, 'dashboard_url': dashboard_url})
+
+
+
+def edit_adoption_request(request):
+    adoption_requests = AdoptionRequest.objects.exclude(adoptionStatus__in=['cancelled', 'rejected'])
+    selected_request = None
+    form = None
+    error = None
+
+    if request.method == 'POST':
+        adoption_id = request.POST.get('adoption_id')
+
+        if not adoption_id:
+            error = "Please select an adoption request to edit."
+        else:
+            try:
+                selected_request = AdoptionRequest.objects.get(pk=adoption_id)
+
+                if selected_request.adoptionStatus == 'accepted':
+                    error = "This adoption request has already been accepted and cannot be modified."
+                else:
+                    form = EditAdoptionRequestForm(request.POST, instance=selected_request)
+                    if form.is_valid():
+                        # Check if the adoption status changed to "Accepted"
+                        if form.cleaned_data['adoptionStatus'] == 'accepted' and form.cleaned_data['dateAdopted']:
+                            # Update the Animal's adoptedOrNot field to 1
+                            animal = selected_request.animalID
+                            animal.adoptedOrNot = 1
+                            animal.save()
+
+                        form.save()
+                        return redirect('staff_dashboard')
+            except AdoptionRequest.DoesNotExist:
+                error = "The selected adoption request does not exist."
+
+    elif request.method == 'GET':
+        adoption_id = request.GET.get('adoption_id')
+
+        if adoption_id:
+            selected_request = AdoptionRequest.objects.filter(pk=adoption_id).first()
+            if selected_request:
+                form = EditAdoptionRequestForm(instance=selected_request)
+
+    return render(request, 'edit_adoption_request.html', {
+        'adoption_requests': adoption_requests,
+        'selected_request': selected_request,
+        'form': form,
+        'error': error,
+    })

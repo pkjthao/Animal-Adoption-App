@@ -42,6 +42,43 @@ class AdoptionForm(forms.ModelForm):
         }
 
 
+class EditAdoptionRequestForm(forms.ModelForm):
+    dateAdopted = forms.CharField(required=False, max_length=10, initial='')  # Allow N/A to be entered as text
+    
+    class Meta:
+        model = AdoptionRequest
+        fields = ['adopterID', 'animalID', 'dateAdopted', 'adoptionStatus', 'staffAdministrator']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Disable fields that shouldn't be changed
+        self.fields['adopterID'].disabled = True
+        self.fields['animalID'].disabled = True
+        self.fields['staffAdministrator'].disabled = True
+        # Make dateAdopted optional
+        self.fields['dateAdopted'].required = False
+        # Set the default value for adoptionStatus to 'not_viewed'
+        self.fields['adoptionStatus'].initial = 'not_viewed'
+    
+    def clean_dateAdopted(self):
+        adoption_status = self.cleaned_data.get('adoptionStatus')
+        date_adopted = self.cleaned_data.get('dateAdopted')
+        
+        if date_adopted == 'N/A':
+            return None  # Set to None if 'N/A' is selected
+        
+        if adoption_status == 'accepted' and not date_adopted:
+            raise forms.ValidationError("Adoption Date is required when status is 'Accepted'.")
+        
+        # Convert to proper date format if a date is entered
+        try:
+            if date_adopted:
+                return forms.DateField().to_python(date_adopted)  # Convert the string to a Date
+        except ValueError:
+            raise forms.ValidationError("Invalid date format. Please enter a valid date.")
+        
+        return date_adopted
+
 class CombinedAdopterSignupForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
     first_name = forms.CharField(max_length=30, required=True)

@@ -63,6 +63,9 @@
             <div class="col-12 col-md-4">
                 <a href="{% url 'view_paychecks' %}" class="btn btn-view-paychecks w-100 btn-custom">View Employee Paychecks</a>
             </div>
+            <div class="col-12 col-md-4">
+                <a href="{% url 'view_adoption_app' %}" class="btn btn-primary w-100 btn-custom">View Adoption Requests</a>
+            </div>
         </div>
 
         <!-- Button Row for Staff Actions (Second Row) -->
@@ -76,6 +79,10 @@
             <!-- Home Button -->
             <div class="col-12 col-md-4">
                 <a href="{% url 'default_page' %}" class="btn btn-primary w-100 btn-custom">Home</a>
+            </div>
+            <!-- Edit Adoption Request Button -->
+            <div class="col-12 col-md-4">
+                <a href="{% url 'edit_adoption_request'%}" class="btn btn-primary w-100 btn-custom">Edit Adoption Requests</a>
             </div>
         </div>
     </div>
