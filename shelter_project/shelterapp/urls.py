@@ -47,4 +47,5 @@ urlpatterns += [
 # Edit Forms
 urlpatterns += [
     path('edit_adoption_request/', views.edit_adoption_request, name='edit_adoption_request'),
+    path('edit_medical_record/', views.edit_medical_record, name='edit_medical_record'),
 ]

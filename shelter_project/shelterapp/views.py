@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm, EditAdoptionRequestForm
+from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm, EditAdoptionRequestForm, EditMedicalRecordForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, Adopter, Staff
@@ -11,6 +11,7 @@ def default_page(request):
     animals = Animal.objects.all()
     return render(request, 'default_page.html', {'animals': animals})
 
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
 def submit_animal(request):
     if request.method == 'POST':
         form = AnimalForm(request.POST)
@@ -55,6 +56,10 @@ def view_medical_records(request):
     return render(request, 'view_medical_records.html', {'medical_records': medical_records})
 
 def medical_records_search(request):
+    # Check if the user is staff
+    if not request.user.is_staff:
+        return redirect('default_page')  # Redirect to home if the user is not a staff member
+    
     query = request.GET.get('q', '')  # Get the search term from the query parameter
     
     # If there's a search query, filter medical records based on it
@@ -62,8 +67,8 @@ def medical_records_search(request):
         medical_records = MedicalRecord.objects.filter(
             Q(diagnosis__icontains=query) |
             Q(animalID__name__icontains=query) |
-            Q(staffID__firstName__icontains=query) |
-            Q(staffID__lastName__icontains=query)
+            Q(staffID__user__firstName__icontains=query) |  # Search by first name in CustomUser
+            Q(staffID__user__lastName__icontains=query)     # Search by last name in CustomUser
         )
     else:
         medical_records = MedicalRecord.objects.all()  # Show all records if no query is provided
@@ -72,6 +77,7 @@ def medical_records_search(request):
     return render(request, 'medical_records_search.html', {
         'medical_records': medical_records, 'query': query
     })
+
 
 def user_logout(request):
     logout(request)  # Logs out the user
@@ -187,7 +193,7 @@ def staff_dashboard(request):
     # Otherwise, they are staff, so no redirection needed
     return render(request, 'staff_dashboard.html')
     
-@login_required
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
 def adoption_app(request, animalID):
     # Get the logged-in user
     user = request.user
@@ -217,7 +223,12 @@ def adoption_app(request, animalID):
 def adoption_confirmation(request):
     return render(request, 'adoption_confirmation.html')
 
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
 def add_med_record(request):
+    # Check if the user is staff
+    if not request.user.is_staff:
+        return redirect('default_page')  # Redirect to home if the user is not a staff member
+    
     query = request.GET.get('search', '')
     selected_animal = None
 
@@ -249,7 +260,7 @@ def add_med_record(request):
         
     return render(request, 'add_med_record.html', context)
 
-@login_required
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
 def view_adoption_app(request):
     # Check if the user is a staff member
     if request.user.is_staff:
@@ -290,7 +301,12 @@ def profile_view(request):
 
 
 
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
 def edit_adoption_request(request):
+    # Check if the user is staff
+    if not request.user.is_staff:
+        return redirect('default_page')  # Redirect to home if the user is not a staff member
+
     adoption_requests = AdoptionRequest.objects.exclude(adoptionStatus__in=['cancelled', 'rejected'])
     selected_request = None
     form = None
@@ -335,4 +351,53 @@ def edit_adoption_request(request):
         'selected_request': selected_request,
         'form': form,
         'error': error,
+    })
+    
+@login_required(login_url='/')  # Redirect unauthenticated users to home page
+def edit_medical_record(request):
+    # Ensure the user is a staff member
+    if not request.user.is_staff:
+        return redirect('default_page')  # Redirect to home if the user is not a staff member
+
+    # Start with all medical records
+    medical_records = MedicalRecord.objects.all()
+
+    # Handle search functionality
+    search_animal_name = request.GET.get('animal_name', '')
+    search_staff_name = request.GET.get('staff_name', '')
+    search_diagnosis = request.GET.get('diagnosis', '')
+
+    # Filter records based on search criteria
+    if search_animal_name:
+        medical_records = medical_records.filter(animalID__name__icontains=search_animal_name)
+    if search_staff_name:
+        # Search by staff username (linked through the Staff model)
+        medical_records = medical_records.filter(staffID__user__username__icontains=search_staff_name)
+    if search_diagnosis:
+        medical_records = medical_records.filter(diagnosis__icontains=search_diagnosis)
+
+    selected_record = None
+    form = None
+
+    if request.method == 'POST':
+        # If a medical record ID is selected
+        medical_id = request.POST.get('medical_id')
+        if medical_id:
+            selected_record = get_object_or_404(MedicalRecord, medicalID=medical_id)
+            form = EditMedicalRecordForm(request.POST, instance=selected_record)
+            if form.is_valid():
+                # Save the updated record
+                form.save()
+                return redirect('staff_dashboard')  # Redirect after updating
+        else:
+            # If no medical record is selected, show the list to select one
+            pass
+
+    return render(request, 'edit_medical_record.html', {
+        'medical_records': medical_records,
+        'selected_record': selected_record,
+        'form': form,
+        'search_animal_name': search_animal_name,
+        'search_staff_name': search_staff_name,
+        'search_diagnosis': search_diagnosis,
     })

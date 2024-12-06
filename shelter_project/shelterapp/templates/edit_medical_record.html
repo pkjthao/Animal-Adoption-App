@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Medical Record</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
+</head>
+<body>
+    <h1>Edit Medical Record</h1>
+
+    <!-- Form to search for a medical record -->
+    <form method="GET">
+        {% csrf_token %}
+        <label for="animal_name">Search by Animal Name:</label>
+        <input type="text" name="animal_name" id="animal_name" value="{{ search_animal_name }}" placeholder="Animal Name">
+
+        <label for="staff_name">Search by Staff Name:</label>
+        <input type="text" name="staff_name" id="staff_name" value="{{ search_staff_name }}" placeholder="Staff Name">
+
+        <label for="diagnosis">Search by Diagnosis:</label>
+        <input type="text" name="diagnosis" id="diagnosis" value="{{ search_diagnosis }}" placeholder="Diagnosis">
+
+        <button type="submit">Search</button>
+    </form>
+
+    <br>
+
+    <!-- Form to select and edit the medical record -->
+    <form method="POST">
+        {% csrf_token %}
+        <label for="medical_id">Select Medical Record:</label>
+        <select name="medical_id" id="medical_id" required>
+            <option value="">-- Select a Medical Record --</option>
+            {% for record in medical_records %}
+                <option value="{{ record.medicalID }}" {% if selected_record and record.medicalID == selected_record.medicalID %}selected{% endif %}>
+                    {{ record.animalID.name }} - {{ record.diagnosis }} ({{ record.staffID.user.username }})
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Load Medical Record</button>
+    </form>
+
+    <br>
+
+    {% if selected_record %}
+        <!-- Display the form to update the selected medical record -->
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="medical_id" value="{{ selected_record.medicalID }}">  <!-- Hidden input for medical_id -->
+            <fieldset>
+                <legend>Update Medical Record Details</legend>
+                {{ form.as_p }}
+                <button type="submit">Update Medical Record</button>
+            </fieldset>
+        </form>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'staff_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

@@ -1,8 +1,35 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Animal, AdoptionRequest, CustomUser, Adopter, Staff, MedicalRecord
+from .models import Animal, AdoptionRequest, CustomUser, Adopter, Staff, MedicalRecord, ShelterLocation
 
 class AnimalForm(forms.ModelForm):
+    locationID = forms.ChoiceField(
+        label='Location of Resident Shelter', 
+        required=True,
+        widget=forms.Select
+    )
+
+    adoptedOrNot = forms.ChoiceField(
+        label='Adoption Status',
+        choices=[(0, 'No'), (1, 'Yes')],
+        widget=forms.Select,
+        required=True
+    )
+
+    species = forms.ChoiceField(
+        label='Species',
+        choices=[('Dog', 'Dog'), ('Cat', 'Cat')],
+        widget=forms.Select,
+        required=True
+    )
+
+    gender = forms.ChoiceField(
+        label='Gender',
+        choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')],
+        widget=forms.Select,
+        required=True
+    )
+    
     class Meta:
         model = Animal
         fields = ['name', 'species', 'breed', 'age', 'gender', 'dateOfArrival', 
@@ -17,11 +44,24 @@ class AnimalForm(forms.ModelForm):
             'dateOfArrival': 'Date of Arrival',
             'adoptedOrNot': 'Adoption Status',
             'healthStatus': 'Health Status',
-            'discription': 'Discription',
+            'description': 'Description',
             'locationID': 'Location of Resident Shelter',
             'reasonForIntake': 'Reason for Intake',
             'adoptionFee': 'Adoption Fee'
         }
+
+    def __init__(self, *args, **kwargs):
+        super(AnimalForm, self).__init__(*args, **kwargs)
+        
+        # Populating the locationID choices with locationName and locationID
+        locations = ShelterLocation.objects.all()
+        location_choices = [
+            (location.locationID, f"{location.locationName} ({location.locationID})" 
+             if ShelterLocation.objects.filter(locationName=location.locationName).count() > 1 
+             else location.locationName)
+            for location in locations
+        ]
+        self.fields['locationID'].choices = location_choices
         
 class AdoptionForm(forms.ModelForm):
     staffAdministrator = forms.ModelChoiceField(
@@ -195,3 +235,34 @@ class StaffAdminForm(forms.ModelForm):
             staff.save()  # Save the Staff profile
 
         return staff
+
+class EditMedicalRecordForm(forms.ModelForm):
+    animalID = forms.ModelChoiceField(queryset=Animal.objects.all(), required=False)
+    staffID = forms.ModelChoiceField(queryset=Staff.objects.all(), required=False)
+    diagnosis = forms.CharField(max_length=200, required=False)
+
+    class Meta:
+        model = MedicalRecord
+        fields = ['animalID', 'staffID', 'diagnosis', 'treatment', 'date', 'note']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Disable fields that shouldn't be changed
+        self.fields['animalID'].disabled = True
+        self.fields['staffID'].disabled = True
+
+    def save(self, commit=True):
+        # Save the medical record first
+        instance = super().save(commit=False)
+        
+        # Check if a diagnosis was provided and update the healthStatus accordingly
+        if 'diagnosis' in self.cleaned_data and self.cleaned_data['diagnosis']:
+            diagnosis = self.cleaned_data['diagnosis']
+            
+            # Update the health status of the associated animal to the diagnosis text
+            instance.animalID.healthStatus = diagnosis
+            instance.animalID.save()  # Save the updated animal record
+        
+        if commit:
+            instance.save()
+        return instance

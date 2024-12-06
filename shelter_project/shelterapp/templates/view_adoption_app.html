@@ -30,7 +30,7 @@
                     <td>{{ request.dateAdopted }}</td>
                     <td>{{ request.adoptionStatus }}</td>
                     {% if user.is_staff %}
-                        <td>{{ request.staffAdministrator }}</td>
+                        <td>{{ request.staffAdministrator.user.first_name }} {{ request.staffAdministrator.user.last_name }}</td>
                     {% endif %}
                 </tr>
             {% empty %}
