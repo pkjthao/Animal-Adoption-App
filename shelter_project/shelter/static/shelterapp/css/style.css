@@ -243,20 +243,116 @@ footer p {
 }
 
 #animal_gallery img {
-    width: 100%; /* Adjust to fit within the grid item */
-    border-radius: 10px; /* Optional styling */
+    width: 20vw;
 }
 
-#banner {
-    width: 100%;
-    position: relative;
-    bottom: 25vw;
+
+
+
+
+
+ /* Custom button height and text centering */
+ .btn-custom {
+  padding: 20px 0;  /* Adds more vertical padding to make buttons taller */
+  font-size: 1.2rem; /* Slightly increase the font size */
+  height: 80px;  /* Set a larger fixed height for all buttons */
+  display: flex;  /* Enables flexbox */
+  align-items: center;  /* Vertically centers text */
+  justify-content: center;  /* Horizontally centers text */
+  text-align: center;  /* Ensures text is aligned properly in case of multi-line text */
 }
 
-#banner-title {
-    position: relative;
-    z-index: 1;
-    font-size: 4vw;
-    margin-top: 10vw;
-    text-align: center;
+/* Button Colors */
+.btn-submit-animal {
+  background-color: #007bff;  /* Blue */
+  color: white;
+}
+
+.btn-submit-animal:hover {
+  background-color: #0056b3;  /* Darker blue */
+}
+
+.btn-add-medical-record {
+  background-color: #28a745;  /* Green */
+  color: white;
+}
+
+.btn-add-medical-record:hover {
+  background-color: #218838;  /* Darker green */
+}
+
+.btn-view-shelters {
+  background-color: #ffc107;  /* Yellow */
+  color: white;
+}
+
+.btn-view-shelters:hover {
+  background-color: #e0a800;  /* Darker yellow */
+}
+
+.btn-view-paychecks {
+  background-color: #dc3545;  /* Red */
+  color: white;
+}
+
+.btn-view-paychecks:hover {
+  background-color: #c82333;  /* Darker red */
+}
+
+.btn-medical-records-search {
+  background-color: #6f42c1;  /* Purple */
+  color: white;
+}
+
+.btn-medical-records-search:hover {
+  background-color: #5a2b8c;  /* Darker purple */
+}
+
+/* Button Row Styles */
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px; /* Adds space between the buttons */
+}
+
+.button-row .col-12 {
+  flex: 1;
+  max-width: 33%; /* Ensures three buttons per row */
+  padding: 10px; /* Optional: Adds padding around each button */
+}
+
+/* Ensure buttons don't get too small on smaller screens */
+@media (max-width: 768px) {
+  .button-row .col-12 {
+      max-width: 45%; /* Buttons take 45% width on smaller screens */
+  }
+}
+@media (max-width: 576px) {
+  .button-row .col-12 {
+      max-width: 100%; /* Buttons take full width on very small screens */
+  }
+}
+
+
+
+
+
+
+/*Adopter dashboard*/
+ /* Custom button height */
+ .btn-custom {
+  padding: 15px 0;  /* Adds vertical padding to make buttons taller */
+  font-size: 1.1rem; /* Slightly increase the font size */
+}
+
+/* Custom button for 'View Adoption Applications' */
+.btn-adoption-requests {
+  background-color: #b12ac9;  /* Dark Red color */
+  color: white;  /* White text */
+}
+
+.btn-adoption-requests:hover {
+  background-color: #6b25a0;  /* Darker red on hover */
+  color: white;  /* White text */
 }

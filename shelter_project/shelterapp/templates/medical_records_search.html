@@ -60,6 +60,7 @@
                     <th>Diagnosis</th>
                     <th>Treatment</th>
                     <th>Date</th>
+                    <th>Note</th>
                     <th>Staff</th>
                 </tr>
             </thead>
@@ -70,7 +71,8 @@
                         <td>{{ record.diagnosis }}</td>
                         <td>{{ record.treatment }}</td>
                         <td>{{ record.date }}</td>
-                        <td>{{ record.staffID.firstName }} {{ record.staffID.lastName }}</td>
+                        <td>{{ record.note }}</td>
+                        <td>{{ record.staffID.user.first_name }} {{ record.staffID.user.last_name }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -78,5 +80,7 @@
     {% else %}
         <p>No medical records found for "{{ query }}".</p>
     {% endif %}
+    <br>
+    <a href="{% url 'staff_dashboard' %}">Back to Dashboard</a>
 </body>
 </html>

@@ -127,15 +127,28 @@ class Animal(models.Model):
 
 
 class AdoptionRequest(models.Model):
-    adoptionID = models.CharField(primary_key=True, max_length=100)
-    adopterID = models.ForeignKey(Adopter, on_delete=models.CASCADE)
-    animalID = models.ForeignKey(Animal, on_delete=models.CASCADE)
-    dateAdopted = models.DateField()
-    adoptionStatus = models.CharField(max_length=100)
-    staffAdministrator = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    # Choices for adoption status
+    ADOPTION_STATUS_CHOICES = [
+        ('not_viewed', 'Not Viewed'),
+        ('in_progress', 'In Progress'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    adoptionID = models.AutoField(primary_key=True)
+    adopterID = models.ForeignKey('Adopter', on_delete=models.CASCADE)
+    animalID = models.ForeignKey('Animal', on_delete=models.CASCADE)
+    dateAdopted = models.DateField(null=True, blank=True)  # Optional date of adoption
+    adoptionStatus = models.CharField(
+        max_length=20,
+        choices=ADOPTION_STATUS_CHOICES,
+        default='not_viewed'  # Default value if not specified
+    )
+    staffAdministrator = models.ForeignKey('Staff', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.adopterID} adopting {self.animalID}'
+        return f"Adoption Request {self.adoptionID}"
 
 
 class MedicalRecord(models.Model):

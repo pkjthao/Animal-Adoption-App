@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Animals</title>
+    <title>View Adoption Requests</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
     <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
@@ -49,20 +49,35 @@
     <h1>Adoption Requests</h1>
 
     <table>
-        {% for request in adoption_requests %}
-           <tr>
-                <td>{{ request.animalID.name }}</td>
-                <td>{{ request.dateAdopted }}</td>
-                <td>{{ request.adoptionStatus }}</td>
+        <thead>
+            <tr>
+                <th>Animal Name</th>
+                <th>Adoption Date</th>
+                <th>Adoption Status</th>
+                {% if user.is_staff %}
+                    <th>Staff Administrator</th>
+                {% endif %}
             </tr>
-        {% empty %}
-        <tr>
-            <td colspan="11">No requests have been made.</td>
-        </tr>
-        {% endfor %}
+        </thead>
+        <tbody>
+            {% for request in adoption_requests %}
+                <tr>
+                    <td>{{ request.animalID.name }}</td>
+                    <td>{{ request.dateAdopted }}</td>
+                    <td>{{ request.adoptionStatus }}</td>
+                    {% if user.is_staff %}
+                        <td>{{ request.staffAdministrator.user.first_name }} {{ request.staffAdministrator.user.last_name }}</td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="{% if user.is_staff %}4{% else %}3{% endif %}">No adoption requests have been made.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
     <br>
-    {% comment %} <a href="{% url 'default_page' %}">Back to Main Page</a> {% endcomment %}
+    <a href="{% url 'default_page' %}">Back to Main Page</a>
 </body>
 </html>

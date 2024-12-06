@@ -8,12 +8,13 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
     <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+    
 </head>
 <body>
     <div id="header">
         <a href="{% url 'default_page' %}">
             <p id="title">
-                <img src="{% static 'shelterapp/images/' %}pawprint.png" alt="pawprint" id="logo">
+                <img src="{% static 'shelterapp/images/pawprint.png' %}" alt="pawprint" id="logo">
                 PawPrints Rescue Center
             </p>
         </a>
@@ -22,16 +23,16 @@
             <ul id="nav">
                 <li><a href="{% url 'default_page' %}">Home</a></li>
                 {% if user.is_staff %}
-                    <li><a href="{% url 'staff_dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'staff_dashboard' %}" class="btn btn-secondary w-100">Dashboard</a></li>
                 {% else %}
-                    <li><a href="{% url 'adopter_dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'adopter_dashboard' %}" class="btn btn-secondary w-100">Dashboard</a></li>
                 {% endif %}
                 <li><a href="{% url 'view_animals' %}">Our Animals</a></li>
                 <li><a href="{% url 'view_shelters' %}">Locations</a></li>
                 <li>
                     <form id="logout" method="POST" action="{% url 'user_logout' %}">
                         {% csrf_token %}
-                        <button type="submit">Sign Out</button>
+                        <button type="submit" class="btn btn-danger w-100">Sign Out</button>
                     </form>
                 </li>
             </ul>
@@ -53,33 +54,24 @@
             <p>Welcome to your adopter dashboard. Here you can manage your activities.</p>
         </div>
 
-        <div class="mt-4 text-center">
-
-            <ul>
-                <li><a href="{% url 'default_page' %}">View Animals in the Shelter</a></li>
-                <li><a href="{% url 'view_adoption_app' %}">View All Adoption Applications</a></li>
-                <li><a href="{% url 'view_shelters' %}">View Shelter Locations</a></li>
-            </ul>
-
-            <!-- View Aniamls Button -->
-            <div class="mt-4">
-                <a href="{% url 'view_animals' %}" class="btn btn-secondary w-100">View All Animals</a>
-            </div>
-    
-            <!-- Home Button -->
-            <div class="mt-4 text-center">
-                <a href="{% url 'default_page' %}" class="btn btn-primary w-100">Home</a>
-            </div>
-    
-            <!-- Sign Out Button -->
-            <div class="mt-4 text-center">
-                <form method="POST" action="{% url 'user_logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger w-100">Sign Out</button>
-                </form>
+        <!-- Horizontal Button Row -->
+        <div class="row justify-content-center mt-4">
+            <!-- View Adoption Applications Button (Custom Dark Red color) -->
+            <div class="col-12 col-md-4 mb-3">
+                <a href="{% url 'view_adoption_app' %}" class="btn btn-adoption-requests w-100 btn-custom">View All Adoption Applications</a>
             </div>
 
+            <!-- View Profile Button (Custom color: Green) -->
+            <div class="col-12 col-md-4 mb-3">
+                <a href="{% url 'profile_view' %}" class="btn btn-success w-100 btn-custom">View Profile</a>
+            </div>
+
+            <!-- Home Button (Custom color: Light Blue) -->
+            <div class="col-12 col-md-4 mb-3">
+                <a href="{% url 'default_page' %}" class="btn btn-primary w-100 btn-custom">Home</a>
+            </div>
         </div>
+    
     </div>
 </body>
 </html>
