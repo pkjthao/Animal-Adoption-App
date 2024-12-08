@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Animal, AdoptionRequest, CustomUser, Adopter, Staff, MedicalRecord, ShelterLocation
+from .models import Animal, AdoptionRequest, CustomUser, Adopter, Staff, MedicalRecord, ShelterLocation, Donation
+from django.utils.timezone import now  # For setting default donation date
 
 class AnimalForm(forms.ModelForm):
     locationID = forms.ChoiceField(
@@ -72,51 +73,43 @@ class AdoptionForm(forms.ModelForm):
     
     class Meta:
         model = AdoptionRequest
-        fields = ['dateAdopted', 'adoptionStatus', 'staffAdministrator']
-        labels = {
-            'dateAdopted': 'Date',
-            'adoptionStatus': 'Application Status'
-        }
-        widgets = {
-            'dateAdopted': forms.DateInput(attrs={'type': 'date'}),  # Add a date picker
-        }
+        fields = ['staffAdministrator']
 
 
 class EditAdoptionRequestForm(forms.ModelForm):
-    dateAdopted = forms.CharField(required=False, max_length=10, initial='')  # Allow N/A to be entered as text
-    
+    dateAdopted = forms.DateField(
+        required=False,  # Allow the field to be optional
+        widget=forms.DateInput(attrs={'type': 'date'}),  # Render as an HTML date input
+    )
+
     class Meta:
         model = AdoptionRequest
-        fields = ['adopterID', 'animalID', 'dateAdopted', 'adoptionStatus', 'staffAdministrator']
-        
+        fields = ['adopterID', 'staffAdministrator', 'animalID', 'adoptionStatus', 'dateAdopted']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Disable fields that shouldn't be changed
         self.fields['adopterID'].disabled = True
         self.fields['animalID'].disabled = True
         self.fields['staffAdministrator'].disabled = True
-        # Make dateAdopted optional
-        self.fields['dateAdopted'].required = False
         # Set the default value for adoptionStatus to 'not_viewed'
         self.fields['adoptionStatus'].initial = 'not_viewed'
-    
+
+        # If dateAdopted is None, set it to display "No-Date" (empty field)
+        if not self.initial.get('dateAdopted'):
+            self.fields['dateAdopted'].widget.attrs['placeholder'] = 'No-Date'
+
     def clean_dateAdopted(self):
         adoption_status = self.cleaned_data.get('adoptionStatus')
         date_adopted = self.cleaned_data.get('dateAdopted')
-        
-        if date_adopted == 'N/A':
-            return None  # Set to None if 'N/A' is selected
-        
-        if adoption_status == 'accepted' and not date_adopted:
-            raise forms.ValidationError("Adoption Date is required when status is 'Accepted'.")
-        
-        # Convert to proper date format if a date is entered
-        try:
-            if date_adopted:
-                return forms.DateField().to_python(date_adopted)  # Convert the string to a Date
-        except ValueError:
-            raise forms.ValidationError("Invalid date format. Please enter a valid date.")
-        
+
+        # Allow empty date fields
+        if not date_adopted:
+            if adoption_status == 'accepted':
+                raise forms.ValidationError("Adoption Date is required when status is 'Accepted'.")
+            return None  # Return None for blank dates
+
+        # Date validation is handled automatically by DateField
         return date_adopted
 
 class CombinedAdopterSignupForm(UserCreationForm):
@@ -239,7 +232,6 @@ class StaffAdminForm(forms.ModelForm):
 class EditMedicalRecordForm(forms.ModelForm):
     animalID = forms.ModelChoiceField(queryset=Animal.objects.all(), required=False)
     staffID = forms.ModelChoiceField(queryset=Staff.objects.all(), required=False)
-    diagnosis = forms.CharField(max_length=200, required=False)
 
     class Meta:
         model = MedicalRecord
@@ -263,6 +255,26 @@ class EditMedicalRecordForm(forms.ModelForm):
             instance.animalID.healthStatus = diagnosis
             instance.animalID.save()  # Save the updated animal record
         
+        if commit:
+            instance.save()
+        return instance
+    
+
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ['locationID', 'amount', 'name', 'phone_number', 'email', 'address']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['locationID'].queryset = ShelterLocation.objects.all()
+        self.fields['locationID'].to_field_name = 'locationID'  # Ensures primary key is used
+
+    def save(self, commit=True):
+        # Automatically set the donation date to today
+        instance = super().save(commit=False)
+        instance.donationDate = now().date()
         if commit:
             instance.save()
         return instance

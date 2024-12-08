@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm, EditAdoptionRequestForm, EditMedicalRecordForm
+from .forms import AnimalForm, AdoptionForm, CombinedAdopterSignupForm, MedicalRecordForm, EditAdoptionRequestForm, EditMedicalRecordForm, DonationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .models import Animal, ShelterLocation, Paycheck, MedicalRecord, Donation, AdoptionRequest, Adopter, Staff
@@ -219,7 +219,12 @@ def staff_dashboard(request):
 def adoption_app(request, animalID):
     # Get the logged-in user
     user = request.user
-
+    
+    # Check if the user is already on the adopter dashboard
+    if request.user.is_staff:
+        # Redirect to the staff dashboard if the user is staff
+        return redirect('staff_dashboard')  # Replace with actual staff dashboard URL name
+    
     # Ensure the user has an Adopter profile
     adopter = get_object_or_404(Adopter, adopterID=user.adopter_profile.adopterID)
 
@@ -336,7 +341,7 @@ def edit_adoption_request(request):
 
     if request.method == 'POST':
         adoption_id = request.POST.get('adoption_id')
-
+        
         if not adoption_id:
             error = "Please select an adoption request to edit."
         else:
@@ -348,14 +353,12 @@ def edit_adoption_request(request):
                 else:
                     form = EditAdoptionRequestForm(request.POST, instance=selected_request)
                     if form.is_valid():
-                        # Check if the adoption status changed to "Accepted"
+                        # Update adoption request details and associated models
                         if form.cleaned_data['adoptionStatus'] == 'accepted' and form.cleaned_data['dateAdopted']:
-                            # Update the Animal's adoptedOrNot field to 1
                             animal = selected_request.animalID
                             animal.adoptedOrNot = 1
                             animal.save()
 
-                            # Update the current occupancy of the shelter
                             shelter = get_object_or_404(ShelterLocation, locationID=animal.locationID)
                             shelter.currentOccupancy = Animal.objects.filter(locationID=shelter.locationID, adoptedOrNot=0).count()
                             shelter.save()
@@ -364,13 +367,12 @@ def edit_adoption_request(request):
                         return redirect('staff_dashboard')
             except AdoptionRequest.DoesNotExist:
                 error = "The selected adoption request does not exist."
-
     elif request.method == 'GET':
         adoption_id = request.GET.get('adoption_id')
-
         if adoption_id:
             selected_request = AdoptionRequest.objects.filter(pk=adoption_id).first()
             if selected_request:
+                # Pre-fill the form with existing data
                 form = EditAdoptionRequestForm(instance=selected_request)
 
     return render(request, 'edit_adoption_request.html', {
@@ -416,9 +418,16 @@ def edit_medical_record(request):
                 # Save the updated record
                 form.save()
                 return redirect('staff_dashboard')  # Redirect after updating
+    elif request.method == 'GET':
+        # Pre-fill the form if a medical record is selected
+        medical_id = request.GET.get('medical_id')
+        if medical_id:
+            selected_record = get_object_or_404(MedicalRecord, medicalID=medical_id)
+            form = EditMedicalRecordForm(instance=selected_record)
         else:
-            # If no medical record is selected, show the list to select one
-            pass
+            form = None  # If no record is selected, no form is displayed
+    
+    formatted_date = selected_record.date.strftime('%Y-%m-%d') if selected_record and selected_record.date else ''
 
     return render(request, 'edit_medical_record.html', {
         'medical_records': medical_records,
@@ -427,4 +436,23 @@ def edit_medical_record(request):
         'search_animal_name': search_animal_name,
         'search_staff_name': search_staff_name,
         'search_diagnosis': search_diagnosis,
+        'formatted_date': formatted_date,
     })
+    
+def submit_donation(request):
+    if request.method == 'POST':
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            donation = form.save()
+
+            # Update the corresponding shelter's funds
+            shelter = get_object_or_404(ShelterLocation, locationID=donation.locationID.locationID)
+            shelter.funds += donation.amount  # Increase the shelter's funds by the donation amount
+            shelter.save()  # Save the updated shelter funds
+
+            # After the donation is processed, render the thank you page
+            return render(request, 'thank_you.html')
+    else:
+        form = DonationForm()
+
+    return render(request, 'submit_donation.html', {'form': form})

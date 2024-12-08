@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Medical Record</title>
+    <title>Donate to Shelter</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     {% load static %}
     <link rel="stylesheet" href="{% static 'shelterapp/css/style.css' %}">
     <link rel="icon" href="{% static 'shelterapp/images/favicon.ico' %}" type="image/x-icon">
+    <script>
+        function formatPhoneNumber(input) {
+            const value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+            let formatted = '';
+            if (value.length > 0) {
+                formatted += '(' + value.substring(0, 3); // Area code
+            }
+            if (value.length >= 4) {
+                formatted += ') ' + value.substring(3, 6); // First three digits after area code
+            }
+            if (value.length >= 7) {
+                formatted += '-' + value.substring(6, 10); // Last four digits
+            }
+            input.value = formatted; // Set the input value
+        }
+    </script>
 </head>
 <body>
     <div id="header">
@@ -47,41 +63,52 @@
             </ul>
         {% endif %}
     </div>
-
-    <h1>Medical Request Form</h1>
-
-    <!-- Search Form -->
-    <form method="get" action="">
-        <label for="search">Search Animal by Name:</label>
-        <input type="text" id="search" name="search" value="{{ request.GET.search }}">
-        <button type="submit">Search</button>
-    </form>
-
-    <!-- Search Results -->
-    <h2>Search Results</h2>
-    <ul>
-        {% for animal in animals %}
-            <li>
-                {{ animal.name }} ({{ animal.animalID }})
-                <a href="?selected_animal={{ animal.animalID }}">Select</a>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <!-- Selected Animal -->
-    {% if selected_animal %}
-        <h3>Selected Animal: {{ selected_animal.name }} (ID: {{ selected_animal.animalID }})</h3>
-    {% endif %}
-
-    <!-- Medical Record Form -->
-    <form method="post">
+    <h1 class="submit_animal_form_header">Make a Donation</h1>
+    <p class="submit_animal_form_header">Your support helps us provide a safe haven for animals in need.</p>
+    
+    <form method="post" class="submit_animal_form">
         {% csrf_token %}
-        {{ form.as_p }}
-        {% if selected_animal %}
-            <input type="hidden" name="animalID" value="{{ selected_animal.animalID }}">
-        {% endif %}
-        <button type="submit">Submit Medical Record</button>
+        
+        <div>
+            <label for="id_locationID">Shelter Location:</label>
+            {{ form.locationID }}
+        </div>
+        
+        <div>
+            <label for="id_amount">Donation Amount:</label>
+            {{ form.amount }}
+        </div>
+        
+        <div>
+            <label for="id_name">Your Name:</label>
+            {{ form.name }}
+        </div>
+        
+        <div>
+            <label for="id_phone_number">Phone Number</label>
+            <input type="text" id="id_phone_number" name="phone_number" placeholder="(XXX) XXX-XXXX" 
+                   oninput="formatPhoneNumber(this)" value="{{ form.phone_number.value }}" class="form-control">
+            {% if form.phone_number.errors %}
+                <div class="text-danger">
+                    {% for error in form.phone_number.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_email">Email:</label>
+            {{ form.email }}
+        </div>
+        
+        <div>
+            <label for="id_address">Address:</label>
+            {{ form.address }}
+        </div>
+        
+        <button type="submit">Submit Donation</button>
     </form>
-    <a href="{% url 'default_page' %}">Back to Main Page</a>
+    
 </body>
 </html>

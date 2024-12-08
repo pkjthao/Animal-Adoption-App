@@ -111,7 +111,7 @@
             <div class="form-group">
                 <label for="id_phone_number">Phone Number</label>
                 <input type="text" id="id_phone_number" name="phone_number" placeholder="(XXX) XXX-XXXX" 
-                       oninput="formatPhoneNumber(this)" value="{{ form.phone_number.value }}" class="form-control">
+                       oninput="formatPhoneNumber(this)" class="form-control">
                 {% if form.phone_number.errors %}
                     <div class="text-danger">
                         {% for error in form.phone_number.errors %}
