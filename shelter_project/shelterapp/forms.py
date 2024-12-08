@@ -50,6 +50,9 @@ class AnimalForm(forms.ModelForm):
             'reasonForIntake': 'Reason for Intake',
             'adoptionFee': 'Adoption Fee'
         }
+        widgets = {
+            'dateOfArrival': forms.DateInput(attrs={'type': 'date'}),  # Add a date picker
+        }
 
     def __init__(self, *args, **kwargs):
         super(AnimalForm, self).__init__(*args, **kwargs)
@@ -200,6 +203,9 @@ class StaffAdminForm(forms.ModelForm):
     class Meta:
         model = Staff
         fields = ['position', 'phone_number', 'hireDate', 'salary']
+        widgets = {
+            'hireDate': forms.DateInput(attrs={'type': 'date'}),  # Add a date picker
+        }
 
     def save(self, commit=True):
         # First, create or retrieve the CustomUser
@@ -236,6 +242,9 @@ class EditMedicalRecordForm(forms.ModelForm):
     class Meta:
         model = MedicalRecord
         fields = ['animalID', 'staffID', 'diagnosis', 'treatment', 'date', 'note']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),  # Add a date picker
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
