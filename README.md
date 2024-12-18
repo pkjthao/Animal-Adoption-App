@@ -14,7 +14,7 @@ $ python -m pip install Django
 Change directory to shelter_project and run:
 ```
 py manage.py runserver
-``
+```
 or
 ```
 python manage.py runserver
