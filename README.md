@@ -6,7 +6,7 @@ To run this web application you should have Python version 3.4 or later installe
 To install Django run:
 ```
 py -m pip install Django
-``
+```
 For Windows and for OS/Unix run:
 ```
 $ python -m pip install Django
